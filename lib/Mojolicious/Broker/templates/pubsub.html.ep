@@ -1,0 +1,151 @@
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <p>Requesting a WebSocket from the URL <code>/sub/leela</code>
+            creates a subscription to the topic "leela". Requesting a WebSocket
+            from the URL <code>/pub/leela</code> allows sending messages to the
+            "leela" topic, which are then received by all the subscribers.</p>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <p>Topics are heirarchical to allow for broad subscriptions without
+            requring more sockets. A subscription to the topic "wong" receives
+            all messages published to the topic "wong" or any child topic like
+            "wong/amy" or "wong/leo"</p>
+
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-6">
+            <h2>Subscribe</h2>
+            <p>Type in a topic and press Enter to subscribe to that topic.</p>
+
+            <form id="sub-form">
+                <div id="sub-topic-field" class="form-group">
+                    <label for="sub-topic">Topic: </label>
+                    <div class="input-group">
+                        <span class="input-group-addon">/</span>
+                        <input type="text" id="sub-topic" class="form-control" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary">Subscribe</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+            <div id="sub-log" class="log"></div>
+        </div>
+
+        <div class="col-md-6">
+            <h2>Publish</h2>
+
+            <p>Once you're subscribed, type in a topic and a message to send a message
+            on that topic.</p>
+
+            <form id="pub-form">
+                <div id="pub-topic-field" class="form-group has-feedback">
+                    <label for="pub-topic">Topic: </label>
+                    <div class="input-group">
+                        <span class="input-group-addon">/</span>
+                        <span class="glyphicon glyphicon-warning-sign form-control-feedback" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-ok-sign form-control-feedback" aria-hidden="true"></span>
+                        <input type="text" id="pub-topic" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message: </label>
+                    <div class="input-group">
+                        <input type="text" id="message" class="form-control" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary">Publish</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+            <div id="pub-log" class="log"></div>
+        </div>
+
+    </div>
+</div>
+
+%= javascript begin
+
+    var pub_ws;
+    var pub_topic;
+    var sub_ws;
+    var sub_topic;
+
+    function send_message() {
+        var message = $( '#message' ).val();
+        pub_ws.send( message );
+        $( '#pub-log' ).prepend( '<p>' + message + '</p>' );
+    }
+
+    function publish ( event ) {
+        event.preventDefault();
+        var new_topic = $( '#pub-topic' ).val();
+        if ( pub_topic != new_topic ) {
+            if ( pub_ws ) {
+                $( '#pub-log' ).prepend( '<p>### Disconnected</p>' );
+                $( '#pub-topic-field' ).removeClass( 'has-success' );
+                pub_ws.close();
+                pub_ws.onclose = undefined;
+            }
+            $( '#pub-log' ).prepend( '<p>### Publishing on /' + new_topic + '</p>' );
+            pub_ws = new WebSocket( '<%= url_for('pub')->to_abs %>' + new_topic );
+            pub_ws.onopen = function () {
+                send_message();
+                pub_topic = new_topic;
+                $( '#pub-topic-field' ).addClass( 'has-success' );
+            };
+            pub_ws.onclose = function ( ) {
+                pub_topic = undefined;
+                pub_ws = undefined;
+                $( '#pub-log' ).prepend( '<p>### Disconnected</p>' );
+                $( '#pub-topic-field' ).removeClass( 'has-success' );
+            };
+        }
+        else {
+            send_message();
+        }
+    }
+
+    function subscribe ( event ) {
+        event.preventDefault();
+        var new_topic = $( '#sub-topic' ).val();
+        if ( sub_topic != new_topic ) {
+            if ( sub_ws ) {
+                $( '#sub-log' ).prepend( '<p>### Disconnected</p>' );
+                $( '#sub-topic-field' ).removeClass( 'has-success' );
+                sub_ws.close();
+                sub_ws.onclose = undefined;
+            }
+            $( '#sub-log' ).prepend( '<p>### Subscribed to /' + new_topic + '</p>' );
+            sub_ws = new WebSocket( '<%= url_for('sub')->to_abs %>' + new_topic );
+            sub_ws.onopen = function ( event ) {
+                $( '#sub-topic-field' ).addClass( 'has-success' );
+            };
+            sub_ws.onmessage = function ( event ) {
+                $( '#sub-log' ).prepend( '<p>' + event.data + '</p>' );
+            };
+            sub_ws.onclose = function ( ) {
+                sub_topic = undefined;
+                sub_ws = undefined;
+                $( '#sub-log' ).prepend( '<p>### Disconnected</p>' );
+                $( '#sub-topic-field' ).removeClass( 'has-success' );
+            };
+            sub_topic = new_topic;
+        }
+    }
+
+    $(function(){
+        $( '#pub-form' ).on( 'submit', publish );
+        $( '#sub-form' ).on( 'submit', subscribe );
+    });
+
+% end

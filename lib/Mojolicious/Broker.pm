@@ -38,6 +38,15 @@ Topics are heirarchical to allow for broad subscriptions without requring more
 sockets. A subscription to the topic C<wong> receives all messages published to
 the topic C<wong> or any child topic like C<wong/amy> or C<wong/leo>.
 
+=head2 Example App
+
+In C<development> mode (the default), the broker provides an example
+application to test the messaging patterns.
+
+You can change the mode by using the C<-m> flag to the
+L<C<broker> command|Mojolicious::Command::broker> or the C<MOJO_MODE> environment
+variable.
+
 =cut
 
 use strict;
@@ -45,6 +54,8 @@ use warnings;
 
 use Mojo::Base 'Mojolicious';
 use Scalar::Util qw( refaddr );
+use File::Basename qw( dirname );
+use File::Spec::Functions qw( catdir );
 
 my %topics;
 
@@ -142,8 +153,16 @@ sub startup {
     $app->helper( remove_topic_subscriber => \&remove_topic_subscriber );
     $app->helper( publish_topic_message => \&publish_topic_message );
     my $r = $app->routes;
-    $r->websocket( '/sub/*topic' )->to( cb => \&route_websocket_sub );
-    $r->websocket( '/pub/*topic' )->to( cb => \&route_websocket_pub );
+    $r->websocket( '/sub/*topic' )->to( cb => \&route_websocket_sub )->name( 'sub' );
+    $r->websocket( '/pub/*topic' )->to( cb => \&route_websocket_pub )->name( 'pub' );
+
+    if ( $app->mode eq 'development' ) {
+        # Enable the example app
+        $app->home->parse( catdir( dirname( __FILE__ ), 'Broker' ) );
+        $app->static->paths->[0] = $app->home->rel_dir('public');
+        $app->renderer->paths->[0] = $app->home->rel_dir('templates');
+        $r->get( '/' )->to( cb => sub { shift->render( 'index' ) } );
+    }
 }
 
 1;

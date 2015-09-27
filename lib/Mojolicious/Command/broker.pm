@@ -6,11 +6,14 @@ package Mojolicious::Command::broker;
   Usage: APPLICATION broker [OPTIONS]
 
     ./myapp.pl broker
-    ./myapp.pl broker -l http://*:8080
+    ./myapp.pl broker -m production -l http://*:8080
     ./myapp.pl broker -l http://127.0.0.1:8080 -l https://[::]:8081
     ./myapp.pl broker -l 'https://*:443?cert=./server.crt&key=./server.key'
 
   Options:
+    -m, --mode <mode>                    Set the mode, defaults to the value
+                                         of MOJO_MODE, PLACK_ENV, or 
+                                         "development"
     -b, --backlog <size>                 Listen backlog size, defaults to
                                          SOMAXCONN
     -c, --clients <number>               Maximum number of concurrent
