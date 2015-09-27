@@ -1,0 +1,5 @@
+.build
+*.swp
+*.tar.gz
+.DS_Store
+/Mojolicious-Broker-*
