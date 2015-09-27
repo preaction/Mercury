@@ -1,6 +1,7 @@
 Changelog for Mojolicious-Broker
 
-0.001 2015-09-27T07:06:02
+0.001 2015-09-27T07:07:28
+ - add build artifacts
  - remove extra strict/warnings
  - add core prereqs
  - add example app with pubsub sample
