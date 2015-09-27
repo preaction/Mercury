@@ -1,0 +1,14 @@
+Changelog for Mojolicious-Broker
+
+0.001 2015-09-27T07:06:02
+ - remove extra strict/warnings
+ - add core prereqs
+ - add example app with pubsub sample
+ - fix pod spacing
+ - add routes pod directive
+ - add broker command
+ - remove perl 5.8 support
+ - add mojolicious prereq
+ - add initial broker app
+ - Minting dist
+
