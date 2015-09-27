@@ -102,6 +102,7 @@ L<Mojolicious::Broker>
 L<Mojolicious::Command>
 
 =item *
+
 L<Mojolicious>
 
 =item *
