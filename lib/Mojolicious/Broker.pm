@@ -49,9 +49,6 @@ variable.
 
 =cut
 
-use strict;
-use warnings;
-
 use Mojo::Base 'Mojolicious';
 use Scalar::Util qw( refaddr );
 use File::Basename qw( dirname );
