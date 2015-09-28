@@ -1,9 +1,9 @@
-package Mojolicious::Broker;
+package Mercury;
 # ABSTRACT: A message broker for WebSockets
 
 =head1 SYNOPSIS
 
-    mojo broker [-l <listen>]
+    mercury broker [-l <listen>]
 
 =head1 DESCRIPTION
 
@@ -44,7 +44,7 @@ In C<development> mode (the default), the broker provides an example
 application to test the messaging patterns.
 
 You can change the mode by using the C<-m> flag to the
-L<C<broker> command|Mojolicious::Command::broker> or the C<MOJO_MODE> environment
+L<C<mercury> command|Mercury::Command::mercury> or the C<MOJO_MODE> environment
 variable.
 
 =cut
@@ -155,7 +155,7 @@ sub startup {
 
     if ( $app->mode eq 'development' ) {
         # Enable the example app
-        $app->home->parse( catdir( dirname( __FILE__ ), 'Broker' ) );
+        $app->home->parse( catdir( dirname( __FILE__ ), 'Mercury' ) );
         $app->static->paths->[0] = $app->home->rel_dir('public');
         $app->renderer->paths->[0] = $app->home->rel_dir('templates');
         $r->get( '/' )->to( cb => sub { shift->render( 'index' ) } );

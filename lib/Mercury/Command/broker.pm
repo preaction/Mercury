@@ -1,14 +1,14 @@
-package Mojolicious::Command::broker;
-# ABSTRACT: Run a broker
+package Mercury::Command::broker;
+# ABSTRACT: Mercury message broker command
 
 =head1 SYNOPSIS
 
-  Usage: APPLICATION broker [OPTIONS]
+  Usage: mercury broker [OPTIONS]
 
-    ./myapp.pl broker
-    ./myapp.pl broker -m production -l http://*:8080
-    ./myapp.pl broker -l http://127.0.0.1:8080 -l https://[::]:8081
-    ./myapp.pl broker -l 'https://*:443?cert=./server.crt&key=./server.key'
+    mercury broker
+    mercury broker -m production -l http://*:8080
+    mercury broker -l http://127.0.0.1:8080 -l https://[::]:8081
+    mercury broker -l 'https://*:443?cert=./server.crt&key=./server.key'
 
   Options:
     -m, --mode <mode>                    Set the mode, defaults to the value
@@ -29,12 +29,12 @@ package Mojolicious::Command::broker;
 
 =head1 DESCRIPTION
 
-L<Mojolicious::Command::broker> starts the L<Mojolicious::Broker> application.
+L<Mercury::Command::broker> starts the L<Mercury> application.
 
 =cut
 
 use Mojo::Base 'Mojolicious::Command';
-use Mojolicious::Broker;
+use Mercury;
 
 use Getopt::Long qw(GetOptionsFromArray :config no_auto_abbrev no_ignore_case);
 use Mojo::Server::Daemon;
@@ -73,7 +73,7 @@ sub run {
     my ( $self, @args ) = @_;
 
     my $daemon = Mojo::Server::Daemon->new(
-        app => Mojolicious::Broker->new,
+        app => Mercury->new,
         inactivity_timeout => 1200,
     );
 
@@ -98,23 +98,7 @@ __END__
 
 =item *
 
-L<Mojolicious::Broker>
-
-=item *
-
-L<Mojolicious::Command>
-
-=item *
-
-L<Mojolicious>
-
-=item *
-
-L<Mojolicious::Guides>
-
-=item *
-
-L<http://mojolicio.us>
+L<Mercury>
 
 =back
 

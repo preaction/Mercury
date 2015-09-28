@@ -2,7 +2,7 @@
 use Test::Mojo;
 use Test::More;
 
-my $t = Test::Mojo->new( 'Mojolicious::Broker' );
+my $t = Test::Mojo->new( 'Mercury' );
 
 $t->websocket_ok( '/pub/foo', 'publish websocket' );
 my $pub_tx = $t->tx;

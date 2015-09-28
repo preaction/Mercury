@@ -1,12 +1,12 @@
 
 % layout 'standard';
-% title 'Mojolicious Message Broker';
+% title 'Mercury Message Broker';
 
 <div class="container">
 
     <div class="row">
         <div class="col-md-12">
-            <h1>Mojolicious::Broker</h1>
+            <h1>Mercury Message Broker</h1>
         </div>
     </div>
 
