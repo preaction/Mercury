@@ -90,7 +90,15 @@ sub run {
         'p|proxy' => sub { $daemon->reverse_proxy(1) },
     );
 
-    $daemon->listen(\@listen) if @listen;
+    if ( @listen ) {
+        $daemon->listen(\@listen);
+    }
+    elsif ( my $conf = eval { $app->config->{ broker } } ) {
+        if ( $conf->{listen} ) {
+            $daemon->listen( [ $conf->{listen} ] );
+        }
+    }
+
     $daemon->run;
 }
 

@@ -2,6 +2,14 @@
 # ABSTRACT: A message broker for WebSockets
 # PODNAME: mercury
 
+use strict;
+use warnings;
+
+require Mojolicious::Commands;
+Mojolicious::Commands->start_app('Mercury');
+
+__END__
+
 =head1 SYNOPSIS
 
     mercury broker [-l <listen>]
@@ -48,10 +56,16 @@ You can change the mode by using the C<-m> flag to the
 L<C<mercury broker> command|Mercury::Command::broker> or the C<MOJO_MODE> environment
 variable.
 
-=cut
+=head1 CONFIGURATION
 
-use strict;
-use warnings;
+The default for the C<listen> option can be set in a configuration file
+C<mercury.conf> in the current working directory. The configuration file
+should look like so:
 
-require Mojolicious::Commands;
-Mojolicious::Commands->start_app('Mercury');
+    # mercury.conf
+    {
+        broker => {
+            listen => "http://*:4000",
+        },
+    }
+

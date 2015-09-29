@@ -111,6 +111,7 @@ sub route_websocket_pub {
 
 sub startup {
     my ( $app ) = @_;
+    $app->plugin( 'Config', { default => { broker => { } } } );
     $app->commands->namespaces( [ 'Mercury::Command::mercury' ] );
 
     $app->helper( add_topic_subscriber => \&add_topic_subscriber );
