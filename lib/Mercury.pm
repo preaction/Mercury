@@ -111,7 +111,7 @@ sub route_websocket_pub {
 
 sub startup {
     my ( $app ) = @_;
-    unshift @{$app->commands->namespaces}, 'Mercury::Command';
+    $app->commands->namespaces( [ 'Mercury::Command' ] );
 
     $app->helper( add_topic_subscriber => \&add_topic_subscriber );
     $app->helper( remove_topic_subscriber => \&remove_topic_subscriber );
