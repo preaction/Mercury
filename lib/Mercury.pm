@@ -146,6 +146,8 @@ sub route_websocket_pub {
 
 sub startup {
     my ( $app ) = @_;
+    unshift @{$app->commands->namespaces}, 'Mercury::Command';
+
     $app->helper( add_topic_subscriber => \&add_topic_subscriber );
     $app->helper( remove_topic_subscriber => \&remove_topic_subscriber );
     $app->helper( publish_topic_message => \&publish_topic_message );
@@ -158,7 +160,7 @@ sub startup {
         $app->home->parse( catdir( dirname( __FILE__ ), 'Mercury' ) );
         $app->static->paths->[0] = $app->home->rel_dir('public');
         $app->renderer->paths->[0] = $app->home->rel_dir('templates');
-        $r->get( '/' )->to( cb => sub { shift->render( 'index' ) } );
+        $r->any( '/' )->to( cb => sub { shift->render( 'index' ) } );
     }
 }
 

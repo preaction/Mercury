@@ -72,8 +72,13 @@ Run this command.
 sub run {
     my ( $self, @args ) = @_;
 
+    # If we're started with the 'mercury' script, we're our own app and we need
+    # to serve ourselves. This ensures that the initialization already done
+    # isn't done twice.
+    my $app = $self->app->isa( 'Mercury' ) ? $self->app : Mercury->new;
+
     my $daemon = Mojo::Server::Daemon->new(
-        app => Mercury->new,
+        app => $app,
         inactivity_timeout => 1200,
     );
 
