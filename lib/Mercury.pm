@@ -122,9 +122,9 @@ sub startup {
 
     if ( $app->mode eq 'development' ) {
         # Enable the example app
-        $app->home->parse( catdir( dirname( __FILE__ ), 'Mercury' ) );
-        $app->static->paths->[0] = $app->home->rel_dir('public');
-        $app->renderer->paths->[0] = $app->home->rel_dir('templates');
+        my $root = catdir( dirname( __FILE__ ), 'Mercury' );
+        $app->static->paths->[0] = catdir( $root, 'public' );
+        $app->renderer->paths->[0] = catdir( $root, 'templates' );
         $r->any( '/' )->to( cb => sub { shift->render( 'index' ) } );
     }
 }
