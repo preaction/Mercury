@@ -1,6 +1,17 @@
 Changelog for Mojolicious-Broker
 
-0.001 2015-09-27T07:07:28
+0.002 2015-09-29T01:49:55
+ - fix gitignore from project rename
+ - add configuration file
+ - do not move the app home directory
+ - remove global Mojolicious mercury command
+ - fix mercury script showing mojo commands
+ - move main docs into mercury script
+ - add mercury command
+ - rename project to Mercury
+
+0.001 2015-09-27T07:07:34Z
+ - release v0.001
  - add build artifacts
  - remove extra strict/warnings
  - add core prereqs

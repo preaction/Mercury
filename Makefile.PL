@@ -7,16 +7,18 @@ use 5.008;
 use ExtUtils::MakeMaker;
 
 my %WriteMakefileArgs = (
-  "ABSTRACT" => "A message broker for WebSockets",
+  "ABSTRACT" => "Main broker application class",
   "AUTHOR" => "Doug Bell <preaction\@cpan.org>",
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => 0
   },
-  "DISTNAME" => "Mojolicious-Broker",
-  "EXE_FILES" => [],
+  "DISTNAME" => "Mercury",
+  "EXE_FILES" => [
+    "bin/mercury"
+  ],
   "LICENSE" => "perl",
   "MIN_PERL_VERSION" => "5.008",
-  "NAME" => "Mojolicious::Broker",
+  "NAME" => "Mercury",
   "PREREQ_PM" => {
     "File::Basename" => 0,
     "File::Spec::Functions" => 0,
@@ -30,7 +32,7 @@ my %WriteMakefileArgs = (
     "IPC::Open3" => 0,
     "Test::More" => "1.001005"
   },
-  "VERSION" => "0.001",
+  "VERSION" => "0.002",
   "test" => {
     "TESTS" => "t/*.t"
   }
