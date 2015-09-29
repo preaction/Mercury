@@ -1,4 +1,4 @@
-package Mercury::Command::broker;
+package Mercury::Command::mercury::broker;
 # ABSTRACT: Mercury message broker command
 
 =head1 SYNOPSIS

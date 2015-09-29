@@ -1,4 +1,4 @@
-package Mojolicious::Command::mercury;
+package Mercury::Command::mercury;
 # ABSTRACT: Mercury command for Mojolicious
 
 use Mojo::Base 'Mojolicious::Commands';
@@ -11,7 +11,7 @@ command.
 EOF
 
 has message    => sub { shift->extract_usage . "\nCommands:\n" };
-has namespaces => sub { ['Mercury::Command'] };
+has namespaces => sub { ['Mercury::Command::mercury'] };
 
 sub help { shift->run(@_) }
 
@@ -23,8 +23,7 @@ sub help { shift->run(@_) }
 
 =head1 DESCRIPTION
 
-L<Mojolicious::Command::mercury> lists available L<Mercury> commands and uses
-the same configuration as your L<Mojolicious> application.
+L<Mercury::Command::mercury> lists available L<Mercury> commands.
 
 =head1 SEE ALSO
 
