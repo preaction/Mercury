@@ -8,7 +8,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
     <style>
-        .log p { margin: 0; }
+        .log p { margin: 0; font-family: monospace; }
     </style>
   </head>
   <body>
