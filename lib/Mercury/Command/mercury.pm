@@ -31,7 +31,7 @@ L<Mercury::Command::mercury> lists available L<Mercury> commands.
 
 =item *
 
-L<Mercury>
+L<mercury>
 
 =back
 

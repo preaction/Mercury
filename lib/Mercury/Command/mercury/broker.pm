@@ -111,7 +111,7 @@ __END__
 
 =item *
 
-L<Mercury>
+L<mercury>
 
 =back
 
