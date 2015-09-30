@@ -16,9 +16,8 @@ __END__
 
 =head1 DESCRIPTION
 
-This is a message broker that enables a simple publish/subscribe messaging
-pattern. A single socket is either a subscription to all messages on a topic,
-or a publishing socket allowed to send messages to that topic.
+This is a message broker that enables some common messaging patterns over
+WebSockets.
 
 WebSockets are a powerful tool, enabling many features previously impossible,
 difficult, or ugly for web developers to implement. Where once only an HTTP
@@ -36,7 +35,14 @@ web server where all clients may not be connected to the same server process.
 The server processes can use a central message broker to coordinate and pass
 messages from one client to another.
 
-=head2 Message Topics
+=head2 Message Bus
+
+A message bus is a many-to-many message pattern. Requesting a WebSocket from
+the URL C</bus/fry> joins the peer-to-peer message bus topic C<fry>. All peers
+joined to the same topic will receive all the messages published to that topic
+by other peers.
+
+=head2 Pub/Sub Messaging
 
 Requesting a WebSocket from the URL C</sub/leela> creates a subscription to the
 topic C<leela>. Requesting a WebSocket from the URL C</pub/leela> allows

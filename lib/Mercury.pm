@@ -19,7 +19,54 @@ use Scalar::Util qw( refaddr );
 use File::Basename qw( dirname );
 use File::Spec::Functions qw( catdir );
 
-my %topics;
+my %pubsub_topics;
+my %bus_topics;
+
+=method add_bus_peer
+
+    $c->add_bus_peer( $topic )
+
+Add the current connection as a peer on the given bus topic. Connections can
+be joined to only one topic.
+
+=cut
+
+sub add_bus_peer {
+    my ( $c, $topic ) = @_;
+    $bus_topics{ $topic }{ refaddr $c } = $c;
+    return;
+}
+
+=method remove_bus_peer
+
+Remove the current connection from the given bus topic. Must be called to clean
+up the state.
+
+=cut
+
+sub remove_bus_peer {
+    my ( $c, $topic ) = @_;
+    delete $bus_topics{ $topic }{ refaddr $c };
+    return;
+}
+
+=method send_bus_message
+
+    $c->send_bus_message( $topic, $message )
+
+Send a message to all the peers on the given bus. Will not send to the current
+peer (they should know what they sent).
+
+=cut
+
+sub send_bus_message {
+    my ( $self, $topic, $message ) = @_;
+    my $self_id = refaddr $self;
+    for my $id ( grep { $_ ne $self_id } keys %{ $bus_topics{ $topic } } ) {
+        $bus_topics{ $topic }{ $id }->send( $message );
+    }
+    return;
+}
 
 =method add_topic_subscriber
 
@@ -33,7 +80,7 @@ child topics as well.
 
 sub add_topic_subscriber {
     my ( $self, $topic ) = @_;
-    $topics{ $topic }{ refaddr $self } = $self;
+    $pubsub_topics{ $topic }{ refaddr $self } = $self;
     return;
 }
 
@@ -48,7 +95,7 @@ the state.
 
 sub remove_topic_subscriber {
     my ( $self, $topic ) = @_;
-    delete $topics{ $topic }{ refaddr $self };
+    delete $pubsub_topics{ $topic }{ refaddr $self };
     return;
 }
 
@@ -66,10 +113,39 @@ sub publish_topic_message {
     my @parts = split m{/}, $topic;
     my @topics = map { join '/', @parts[0..$_] } 0..$#parts;
     for my $topic ( @topics ) {
-        $_->send( $message ) for values %{ $topics{ $topic } };
+        $_->send( $message ) for values %{ $pubsub_topics{ $topic } };
     }
     return;
 }
+
+=route /bus/*topic
+
+Establish a WebSocket message bus to send/recieve messages on the given
+C<topic>. All clients connected to the topic will receive all messages
+published on the topic.
+
+This is a shorter way of doing both C</pub/*topic> and C</sub/*topic>,
+without the hierarchal message passing.
+
+=cut
+
+sub route_websocket_bus {
+    my ( $c ) = @_;
+    Mojo::IOLoop->stream($c->tx->connection)->timeout(1200);
+
+    my $topic = $c->stash( 'topic' );
+    $c->add_bus_peer( $topic );
+
+    $c->on( message => sub {
+        my ( $c, $msg ) = @_;
+        $c->send_bus_message( $topic, $msg );
+    } );
+
+    $c->on( finish => sub {
+        my ( $c ) = @_;
+        $c->remove_bus_peer( $topic );
+    } );
+};
 
 =route /sub/*topic
 
@@ -117,9 +193,13 @@ sub startup {
     $app->helper( add_topic_subscriber => \&add_topic_subscriber );
     $app->helper( remove_topic_subscriber => \&remove_topic_subscriber );
     $app->helper( publish_topic_message => \&publish_topic_message );
+    $app->helper( add_bus_peer => \&add_bus_peer );
+    $app->helper( remove_bus_peer => \&remove_bus_peer );
+    $app->helper( send_bus_message => \&send_bus_message );
     my $r = $app->routes;
     $r->websocket( '/sub/*topic' )->to( cb => \&route_websocket_sub )->name( 'sub' );
     $r->websocket( '/pub/*topic' )->to( cb => \&route_websocket_pub )->name( 'pub' );
+    $r->websocket( '/bus/*topic' )->to( cb => \&route_websocket_bus )->name( 'bus' );
 
     if ( $app->mode eq 'development' ) {
         # Enable the example app

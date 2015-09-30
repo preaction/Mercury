@@ -18,6 +18,11 @@
                 </a>
             </li>
             <li role="presentation">
+                <a href="#bus" aria-controls="bus" role="tab" data-toggle="tab">
+                    Bus
+                </a>
+            </li>
+            <li role="presentation">
                 <a href="#pubsub" aria-controls="pubsub" role="tab" data-toggle="tab">
                     Pub/Sub
                 </a>
@@ -49,14 +54,26 @@
 
                         <div class="col-md-6">
 
-                            <p>This is a message broker that enables a simple publish/subscribe
-                            messaging pattern. A single socket is either a subscription to all
-                            messages on a topic, or a publishing socket allowed to send messages
-                            to that topic.</p>
+                            <p>This is a message broker that enables some simple
+                            messaging patterns. </p>
 
+                            <dl class="dl-horizontal">
+                                <dt>Bus</dt>
+                                <dd>A message bus is a many-to-many, peer-to-peer
+                                message pattern. All peers connect to a topic and
+                                receive all messages published on that topic.</dd>
+                                <dt>Pub/Sub</dt>
+                                <dd>A pub/sub allows one or more publishers to send
+                                messages to one or more subscribers. Pub/sub topics
+                                are hierarchal, allowing subscribers to broaden
+                                or narrow the messages recieved.</dd>
+                            </dl>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="bus">
+                %= include 'bus'
             </div>
             <div role="tabpanel" class="tab-pane fade" id="pubsub">
                 %= include 'pubsub'
