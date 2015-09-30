@@ -1,4 +1,5 @@
 
+use Mojo::Base -strict;
 use Test::Mojo;
 use Test::More;
 
@@ -29,8 +30,8 @@ subtest 'bus' => sub {
         }
     };
 
-    for my $tx ( @peers ) {
-        $t->tx( $tx )->finish_ok( 1000, "peer $i closed" );
+    for my $i ( 0..$#peers ) {
+        $t->tx( $peers[$i] )->finish_ok( 1000, "peer $i closed" );
     }
 };
 
