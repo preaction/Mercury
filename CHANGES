@@ -1,6 +1,17 @@
 Changelog for Mojolicious-Broker
 
-0.002 2015-09-29T01:49:55
+0.003 2015-09-30T05:36:08
+ - add strict to test
+ - test pubsub topic hierarchy
+ - make pattern list easier to read in demo app
+ - move more important demo explanation to the left
+ - add text to demo app to indicate pub or sub urls
+ - use monospace font in demo app logs
+ - reformat intro text in demo app
+ - add bus messaging pattern
+ - move pubsub test into subtest
+
+0.002 2015-09-29T01:49:55Z
  - fix gitignore from project rename
  - add configuration file
  - do not move the app home directory

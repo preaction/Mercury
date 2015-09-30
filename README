@@ -9,6 +9,25 @@ Mercury documentation|mercury>. For how to start the broker application, see
 L<the mercury broker command documentation|Mercury::Command::broker> or
 run C<mercury help broker>.
 
+=method add_bus_peer
+
+    $c->add_bus_peer( $topic )
+
+Add the current connection as a peer on the given bus topic. Connections can
+be joined to only one topic.
+
+=method remove_bus_peer
+
+Remove the current connection from the given bus topic. Must be called to clean
+up the state.
+
+=method send_bus_message
+
+    $c->send_bus_message( $topic, $message )
+
+Send a message to all the peers on the given bus. Will not send to the current
+peer (they should know what they sent).
+
 =method add_topic_subscriber
 
     $c->add_topic_subscriber( $topic );
@@ -30,6 +49,15 @@ the state.
 
 Publish a message on the given topic. The message will be sent once to any subscriber
 of this topic or any child topics.
+
+=route /bus/*topic
+
+Establish a WebSocket message bus to send/recieve messages on the given
+C<topic>. All clients connected to the topic will receive all messages
+published on the topic.
+
+This is a shorter way of doing both C</pub/*topic> and C</sub/*topic>,
+without the hierarchal message passing.
 
 =route /sub/*topic
 

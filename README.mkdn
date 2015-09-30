@@ -4,7 +4,7 @@ Mercury - Main broker application class
 
 # VERSION
 
-version 0.002
+version 0.003
 
 # DESCRIPTION
 
@@ -19,6 +19,15 @@ run `mercury help broker`.
 
 # ROUTES
 
+## /bus/\*topic
+
+Establish a WebSocket message bus to send/recieve messages on the given
+`topic`. All clients connected to the topic will receive all messages
+published on the topic.
+
+This is a shorter way of doing both `/pub/*topic` and `/sub/*topic`,
+without the hierarchal message passing.
+
 ## /sub/\*topic
 
 Establish a WebSocket to subscribe to the given `topic`. Messages published
@@ -30,6 +39,25 @@ Establish a WebSocket to publish to the given `topic`. Messages published to
 the topic will be sent to all subscribers to the topic or any parent topics.
 
 # METHODS
+
+## add\_bus\_peer
+
+    $c->add_bus_peer( $topic )
+
+Add the current connection as a peer on the given bus topic. Connections can
+be joined to only one topic.
+
+## remove\_bus\_peer
+
+Remove the current connection from the given bus topic. Must be called to clean
+up the state.
+
+## send\_bus\_message
+
+    $c->send_bus_message( $topic, $message )
+
+Send a message to all the peers on the given bus. Will not send to the current
+peer (they should know what they sent).
 
 ## add\_topic\_subscriber
 
