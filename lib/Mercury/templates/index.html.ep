@@ -35,6 +35,27 @@
 
                         <div class="col-md-6">
 
+                            <p>Mercury is a WebSocket message broker that
+                            enables some simple messaging patterns.</p>
+
+                            <dl class="dl-horizontal">
+                                <dt>Bus</dt>
+                                <dd>A message bus is a many-to-many,
+                                peer-to-peer message pattern. All peers connect
+                                to a topic and receive all messages published
+                                on that topic.</dd>
+
+                                <dt>Pub/Sub</dt>
+                                <dd>A pub/sub allows one or more publishers to
+                                send messages to one or more subscribers.
+                                Pub/sub topics are hierarchal, allowing
+                                subscribers to broaden or narrow the messages
+                                recieved.</dd>
+                            </dl>
+                        </div>
+
+                        <div class="col-md-6">
+
                             <p>WebSockets are a powerful tool, enabling many
                             features previously impossible, difficult, or ugly
                             for web developers to implement. Where once only an
@@ -57,23 +78,6 @@
 
                         </div>
 
-                        <div class="col-md-6">
-
-                            <p>This is a message broker that enables some simple
-                            messaging patterns. </p>
-
-                            <dl class="dl-horizontal">
-                                <dt>Bus</dt>
-                                <dd>A message bus is a many-to-many, peer-to-peer
-                                message pattern. All peers connect to a topic and
-                                receive all messages published on that topic.</dd>
-                                <dt>Pub/Sub</dt>
-                                <dd>A pub/sub allows one or more publishers to send
-                                messages to one or more subscribers. Pub/sub topics
-                                are hierarchal, allowing subscribers to broaden
-                                or narrow the messages recieved.</dd>
-                            </dl>
-                        </div>
                     </div>
                 </div>
             </div>
