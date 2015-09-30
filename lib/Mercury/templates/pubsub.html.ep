@@ -30,7 +30,7 @@
                 <div id="sub-topic-field" class="form-group">
                     <label for="sub-topic">Topic: </label>
                     <div class="input-group">
-                        <span class="input-group-addon">/</span>
+                        <span class="input-group-addon">/sub/</span>
                         <input type="text" id="sub-topic" class="form-control" />
                         <span class="input-group-btn">
                             <button class="btn btn-primary">Subscribe</button>
@@ -51,7 +51,7 @@
                 <div id="pub-topic-field" class="form-group has-feedback">
                     <label for="pub-topic">Topic: </label>
                     <div class="input-group">
-                        <span class="input-group-addon">/</span>
+                        <span class="input-group-addon">/pub/</span>
                         <span class="glyphicon glyphicon-warning-sign form-control-feedback" aria-hidden="true"></span>
                         <span class="glyphicon glyphicon-ok-sign form-control-feedback" aria-hidden="true"></span>
                         <input type="text" id="pub-topic" class="form-control" />
