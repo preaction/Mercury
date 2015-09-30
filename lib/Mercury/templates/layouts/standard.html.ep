@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
     <style>
         .log p { margin: 0; font-family: monospace; }
+        dd { margin: 0 0 10px; }
     </style>
   </head>
   <body>

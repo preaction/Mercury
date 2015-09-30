@@ -38,7 +38,7 @@
                             <p>Mercury is a WebSocket message broker that
                             enables some simple messaging patterns.</p>
 
-                            <dl class="dl-horizontal">
+                            <dl>
                                 <dt>Bus</dt>
                                 <dd>A message bus is a many-to-many,
                                 peer-to-peer message pattern. All peers connect
