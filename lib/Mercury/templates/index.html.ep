@@ -2,11 +2,29 @@
 % layout 'standard';
 % title 'Mercury Message Broker';
 
+%= javascript begin
+
+    function open_ws( path ) {
+        var root = 'ws://' + $( '#url-root' ).val();
+        return new WebSocket( root + path );
+    }
+
+% end
+
 <div class="container">
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8">
             <h1>Mercury Message Broker</h1>
+        </div>
+        <div class="col-md-4">
+            <label for="url-root">Broker Root: </label>
+            <div class="input-group">
+                <span class="input-group-addon">ws://</span>
+                <input type="text" id="url-root" class="form-control"
+                    value="<%= url_for( 'bus' )->to_abs->host_port %>"
+                />
+            </div>
         </div>
     </div>
 

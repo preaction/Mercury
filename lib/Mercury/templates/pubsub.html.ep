@@ -97,7 +97,7 @@
                 pub_ws.onclose = undefined;
             }
             $( '#pub-log' ).prepend( '<p>### Publishing on /' + new_topic + '</p>' );
-            pub_ws = new WebSocket( '<%= url_for('pub')->to_abs %>' + new_topic );
+            pub_ws = open_ws( '<%= url_for( 'pub' )->path %>' + new_topic );
             pub_ws.onopen = function () {
                 send_message();
                 pub_topic = new_topic;
@@ -126,7 +126,7 @@
                 sub_ws.onclose = undefined;
             }
             $( '#sub-log' ).prepend( '<p>### Subscribed to /' + new_topic + '</p>' );
-            sub_ws = new WebSocket( '<%= url_for('sub')->to_abs %>' + new_topic );
+            sub_ws = open_ws( '<%= url_for( 'sub' )->path %>' + new_topic );
             sub_ws.onopen = function ( event ) {
                 $( '#sub-topic-field' ).addClass( 'has-success' );
             };
