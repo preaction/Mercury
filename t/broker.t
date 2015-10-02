@@ -12,6 +12,11 @@ subtest 'bus' => sub {
         push @peers, $t->tx;
     }
 
+    my $stranger_tx = $t->websocket_ok( '/bus/bar' )->tx;
+    $stranger_tx->on( message => sub {
+        fail 'Stranger received message from wrong bus';
+    } );
+
     subtest 'peer 0' => sub {
         $t->tx( $peers[0] )->send_ok( { text => 'Hello' }, 'peer 0 sends message' );
         for my $i ( 1..3 ) {
@@ -33,6 +38,7 @@ subtest 'bus' => sub {
     for my $i ( 0..$#peers ) {
         $t->tx( $peers[$i] )->finish_ok( 1000, "peer $i closed" );
     }
+    $t->tx( $stranger_tx )->finish_ok( 1000, 'stranger left' );
 };
 
 subtest 'pubsub' => sub {
