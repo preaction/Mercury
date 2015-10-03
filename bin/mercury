@@ -53,6 +53,15 @@ Topics are heirarchical to allow for broad subscriptions without requring more
 sockets. A subscription to the topic C<wong> receives all messages published to
 the topic C<wong> or any child topic like C<wong/amy> or C<wong/leo>.
 
+=head2 Push/Pull
+
+Push/pull deals out messages in a round-robin manner. Pushers send messages
+which are handled by a single puller.
+
+Handlers request WebSockets from the URL C</pull/bender>. Senders request
+WebSockets from the URL C</push/bender>. Senders send messages which will
+be received by a single handler.
+
 =head2 Example App
 
 In C<development> mode (the default), the broker provides an example
