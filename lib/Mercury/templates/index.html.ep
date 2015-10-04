@@ -45,6 +45,11 @@
                     Pub/Sub
                 </a>
             </li>
+            <li role="presentation">
+                <a href="#pushpull" aria-controls="pushpull" role="tab" data-toggle="tab">
+                    Push/Pull
+                </a>
+            </li>
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane fade in active" id="info">
@@ -69,6 +74,11 @@
                                 Pub/sub topics are hierarchal, allowing
                                 subscribers to broaden or narrow the messages
                                 recieved.</dd>
+
+                                <dt>Push/Pull</dt>
+                                <dd>A push/pull allows one or more publishers to
+                                send messages that will be handled by exactly
+                                one subscriber in a rotation.</dd>
                             </dl>
                         </div>
 
@@ -104,6 +114,9 @@
             </div>
             <div role="tabpanel" class="tab-pane fade" id="pubsub">
                 %= include 'pubsub'
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="pushpull">
+                %= include 'pushpull'
             </div>
         </div>
 
