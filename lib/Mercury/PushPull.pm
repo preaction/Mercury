@@ -113,9 +113,9 @@ sub remove_puller {
     my @pullers = @{ $self->pullers };
     for my $i ( 0.. $#pullers ) {
         if ( $pullers[$i] eq $c ) {
-            splice @pullers, $i, 1;
+            splice @{ $self->pullers }, $i, 1;
             my $current_puller_index = $self->current_puller_index;
-            if ( $current_puller_index < $i ) {
+            if ( $i > 0 && $current_puller_index >= $i ) {
                 $self->current_puller_index( $current_puller_index - 1 );
             }
             return;
