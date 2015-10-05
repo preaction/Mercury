@@ -73,9 +73,23 @@ variable.
 
 =head1 CONFIGURATION
 
-The default for the C<listen> option can be set in a configuration file
-C<mercury.conf> in the current working directory. The configuration file
-should look like so:
+You can have an optional configuration file C<mercury.conf> in the current
+working directory. The configuration file is a Perl hash, with the broker
+configuration in the C<broker> key, like so:
+
+    # mercury.conf
+    {
+        broker => {
+            listen => "http://*:4000",
+            allow_origin => [
+                'example.com',
+            ],
+        },
+    }
+
+The individual configuration keys are:
+
+=head2 listen
 
     # mercury.conf
     {
@@ -83,6 +97,9 @@ should look like so:
             listen => "http://*:4000",
         },
     }
+
+You can set the default for the C<-l|--listen> option in the configuration
+file.
 
 =head2 allow_origin
 
