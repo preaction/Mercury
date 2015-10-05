@@ -121,3 +121,26 @@ This is not a comprehensive security measure. The server is trusting that the
 client is not lying about its C<Origin>. The client can claim any origin it
 wants.
 
+=head1 SEE ALSO
+
+=over 4
+
+=item L<socket.io|http://socket.io>
+
+A JavaScript WebSocket messaging library (client and server). For a
+socket.io-compatible server written in Perl, see L<PocketIO>.
+
+=item L<zeromq|http://zeromq.org>
+
+A socket library that provides communication patterns for scalability.
+The inspiration to build Mercury (Mercury requires only Perl 5.10 or higher).
+For a Perl API to ZeroMQ, see L<ZMQ::FFI>.
+
+=item L<nanomsg|http://nanomsg.org>
+
+A socket library that provides communication patterns for scalability. The
+successor to ZeroMQ. The inspiration of the features provided by Mercury. For a
+Perl API, see L<NanoMsg::Raw>.
+
+=back
+
