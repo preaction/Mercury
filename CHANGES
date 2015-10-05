@@ -1,6 +1,20 @@
 Changelog for Mojolicious-Broker
 
-0.003 2015-09-30T05:36:08
+0.004 2015-10-05T05:06:53
+ - add more detail on the various pattern docs
+ - expand configuration documentation
+ - add some other solutions to SEE ALSO
+ - add allow_origin config to check origin header
+ - fix bad state when cleaning up pull socket close
+ - add push/pull to the demo app
+ - add push/pull pattern
+ - test to ensure strangers don't get bus messages
+ - test pubsub messages being sent incorrectly
+ - add field to demo to test brokers on other hosts
+ - use correct file for README
+ - link SEE ALSO to main mercury docs
+
+0.003 2015-09-30T05:36:08Z
  - add strict to test
  - test pubsub topic hierarchy
  - make pattern list easier to read in demo app
