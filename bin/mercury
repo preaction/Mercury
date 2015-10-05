@@ -37,12 +37,20 @@ messages from one client to another.
 
 =head2 Message Bus
 
-A message bus is a many-to-many message pattern. Requesting a WebSocket from
-the URL C</bus/fry> joins the peer-to-peer message bus topic C<fry>. All peers
-joined to the same topic will receive all the messages published to that topic
-by other peers.
+A message bus allows for all connected peers to send and receive messages in a
+group.
+
+Requesting a WebSocket from the URL C</bus/fry> joins the peer-to-peer message
+bus topic C<fry>. All peers joined to the same topic will receive all the
+messages published to that topic by other peers.
+
+This is useful for sharing state changes between multiple peers, for example,
+in a forking web app server like L<Hypnotoad> or L<Starman>.
 
 =head2 Pub/Sub Messaging
+
+The pub/sub pattern allows for 1-to-many delivery of messages from one
+publisher to any number of active subscribers.
 
 Requesting a WebSocket from the URL C</sub/leela> creates a subscription to the
 topic C<leela>. Requesting a WebSocket from the URL C</pub/leela> allows
@@ -53,6 +61,9 @@ Topics are heirarchical to allow for broad subscriptions without requring more
 sockets. A subscription to the topic C<wong> receives all messages published to
 the topic C<wong> or any child topic like C<wong/amy> or C<wong/leo>.
 
+This pattern is useful for keeping clients informed of backend processes,
+tapping into an event or logging stream.
+
 =head2 Push/Pull
 
 Push/pull deals out messages in a round-robin manner. Pushers send messages
@@ -61,6 +72,9 @@ which are handled by a single puller.
 Handlers request WebSockets from the URL C</pull/bender>. Senders request
 WebSockets from the URL C</push/bender>. Senders send messages which will
 be received by a single handler.
+
+This pattern is useful for load balancing incoming updates, or creating
+processing pipelines using multiple push/pull endpoints.
 
 =head2 Example App
 
