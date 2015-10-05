@@ -84,3 +84,40 @@ should look like so:
         },
     }
 
+=head2 allow_origin
+
+    # mercury.conf
+    {
+        broker => {
+            allow_origin => [
+                'example.com',
+            ],
+        },
+    }
+
+Instead of CORS (used by Ajax), WebSockets send an C<Origin> header with the
+initial handshake. This header contains the protocol, host, and port used by
+the page requesting the socket.
+
+As a basic security measure, you can configure the allowed origin values with
+the C<allow_origin> configuration key. When this is set, only WebSocket
+handshakes with an C<Origin> header matching one of the values will be allowed.
+If there is no C<Origin> header, or the header does not match, the connection
+will be denied with a C<401 Unauthorized> response.
+
+C<allow_origin> key can be a single string, or an array of strings, containing
+a string to match against the incoming C<Origin> header. The C<*> character is
+a wildcard.
+
+Each of the following examples will match the origin
+C<http://www.example.com:3000>.
+
+    example.com
+    *.example.com
+    *://www.example.com
+    http://www.example.com:*
+
+This is not a comprehensive security measure. The server is trusting that the
+client is not lying about its C<Origin>. The client can claim any origin it
+wants.
+

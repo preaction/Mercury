@@ -228,7 +228,28 @@ sub startup {
     $app->helper( add_bus_peer => \&add_bus_peer );
     $app->helper( remove_bus_peer => \&remove_bus_peer );
     $app->helper( send_bus_message => \&send_bus_message );
+
     my $r = $app->routes;
+    if ( my $origin = $app->config->{broker}{allow_origin} ) {
+        # Allow only '*' for wildcards
+        my @origin = map { quotemeta } ref $origin eq 'ARRAY' ? @$origin : $origin;
+        s/\\\*/.*/g for @origin;
+
+        $r = $r->under( '/' => sub {
+            #say "Got origin: " . $_[0]->req->headers->origin;
+            #say "Checking against: @origin";
+            my $origin = $_[0]->req->headers->origin;
+            if ( !$origin || !grep { $origin =~ /$_/ } @origin ) {
+                $_[0]->render(
+                    status => '401',
+                    text => 'Origin check failed',
+                );
+                return;
+            }
+            return 1;
+        } );
+    }
+
     $r->websocket( '/sub/*topic' )->to( cb => \&route_websocket_sub )->name( 'sub' );
     $r->websocket( '/pub/*topic' )->to( cb => \&route_websocket_pub )->name( 'pub' );
     $r->websocket( '/bus/*topic' )->to( cb => \&route_websocket_bus )->name( 'bus' );
@@ -240,7 +261,7 @@ sub startup {
         my $root = catdir( dirname( __FILE__ ), 'Mercury' );
         $app->static->paths->[0] = catdir( $root, 'public' );
         $app->renderer->paths->[0] = catdir( $root, 'templates' );
-        $r->any( '/' )->to( cb => sub { shift->render( 'index' ) } );
+        $app->routes->any( '/' )->to( cb => sub { shift->render( 'index' ) } );
     }
 }
 
