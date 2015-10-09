@@ -1,6 +1,11 @@
 Changelog for Mojolicious-Broker
 
-0.004 2015-10-05T05:06:53
+0.005 2015-10-09T05:38:21
+ - fix test failure when re-using Test::Mojo object
+ - break single broker test into pattern tests
+ - fix link to the mercury broker command in docs
+
+0.004 2015-10-05T05:06:53Z
  - add more detail on the various pattern docs
  - expand configuration documentation
  - add some other solutions to SEE ALSO

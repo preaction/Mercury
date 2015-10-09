@@ -69,8 +69,8 @@ processing pipelines using multiple push/pull endpoints.
 In C<development> mode (the default), the broker provides an example
 application to test the messaging patterns.
 
-You can change the mode by using the C<-m> flag to the
-L<C<mercury broker> command|Mercury::Command::broker> or the C<MOJO_MODE> environment
+You can change the mode by using the C<-m> flag to the L<C<mercury broker>
+command|Mercury::Command::mercury::broker> or the C<MOJO_MODE> environment
 variable.
 
 =head1 CONFIGURATION
