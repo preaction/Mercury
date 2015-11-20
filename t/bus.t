@@ -7,10 +7,11 @@ use Mercury;
 my $app = Mercury->new;
 
 my @peers;
-for my $i ( 0..3 ) {
+for my $i ( 0..2 ) {
     my $t = Test::Mojo->new( $app )->websocket_ok( '/bus/foo' );
     push @peers, $t;
 }
+push @peers, Test::Mojo->new( $app )->websocket_ok( '/bus/foo?echo=1' );
 
 my $stranger_t = Test::Mojo->new( $app )->websocket_ok( '/bus/bar' );
 $stranger_t->tx->on( message => sub {
@@ -18,20 +19,32 @@ $stranger_t->tx->on( message => sub {
 } );
 
 subtest 'peer 0' => sub {
-    $peers[0]->send_ok( { text => 'Hello' }, 'peer 0 sends message' );
+    $peers[0]->send_ok( { text => 'Hello 0' }, 'peer 0 sends message' );
     for my $i ( 1..3 ) {
         $peers[$i]
             ->message_ok( "peer $i received message" )
-            ->message_is( 'Hello' );
+            ->message_is( 'Hello 0' );
     }
 };
 
 subtest 'peer 2' => sub {
-    $peers[2]->send_ok( { text => 'Hello' }, 'peer 2 sends message' );
+    $peers[2]->send_ok( { text => 'Hello 2' }, 'peer 2 sends message' );
     for my $i ( 0, 1, 3 ) {
         $peers[$i]
             ->message_ok( "peer $i received message" )
-            ->message_is( 'Hello' );
+            ->message_is( 'Hello 2' );
+    }
+};
+
+# peer 3 has echo enabled, if the other senders had had it enabled they would
+# fail the test following their send by receiving the message sent from the
+# previous test
+subtest 'peer 3' => sub {
+    $peers[3]->send_ok( { text => 'Hello 3' }, 'peer 3 sends message' );
+    for my $i ( 0 .. 3 ) {
+        $peers[$i]
+            ->message_ok( "peer $i received message" )
+            ->message_is( 'Hello 3' );
     }
 };
 

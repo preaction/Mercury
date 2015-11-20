@@ -34,8 +34,9 @@ be joined to only one topic.
 =cut
 
 sub add_bus_peer {
-    my ( $c, $topic ) = @_;
-    $bus_topics{ $topic }{ refaddr $c } = $c;
+    my ( $c, $topic, %options ) = @_;
+    $options{_controller} = $c;
+    $bus_topics{ $topic }{ refaddr $c } = \%options;
     return;
 }
 
@@ -64,8 +65,10 @@ peer (they should know what they sent).
 sub send_bus_message {
     my ( $self, $topic, $message ) = @_;
     my $self_id = refaddr $self;
-    for my $id ( grep { $_ ne $self_id } keys %{ $bus_topics{ $topic } } ) {
-        $bus_topics{ $topic }{ $id }->send( $message );
+    for my $id ( keys %{ $bus_topics{ $topic } } ) {
+        my $peer = $bus_topics{ $topic }{ $id };
+        next unless $id ne $self_id || $peer->{echo};
+        $peer->{_controller}->send( $message );
     }
     return;
 }
@@ -129,6 +132,12 @@ published on the topic.
 This is a shorter way of doing both C</pub/*topic> and C</sub/*topic>,
 without the hierarchal message passing.
 
+One difference is that by default a sender will not receive a message
+that they sent. To enable this behavior, pass a true value as the C<echo>
+query parameter when establishing the websocket.
+
+  $ua->websocket('/bus/foo?echo=1' => sub { ... });
+
 =cut
 
 sub route_websocket_bus {
@@ -136,7 +145,8 @@ sub route_websocket_bus {
     Mojo::IOLoop->stream($c->tx->connection)->timeout(1200);
 
     my $topic = $c->stash( 'topic' );
-    $c->add_bus_peer( $topic );
+    my $echo = $c->param('echo');
+    $c->add_bus_peer( $topic, echo => $echo );
 
     $c->on( message => sub {
         my ( $c, $msg ) = @_;
