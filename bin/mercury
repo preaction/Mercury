@@ -152,6 +152,28 @@ This is not a comprehensive security measure. The server is trusting that the
 client is not lying about its C<Origin>. The client can claim any origin it
 wants.
 
+=head1 USAGE
+
+=head2 Mojolicious
+
+To use Mercury to communicate between Mojolicious server processes, use
+L<Mojo::UserAgent's websocket method|Mojo::UserAgent/websocket>.
+
+=head2 Dancer
+
+To use Mercury inside of a L<Dancer> or L<Dancer2> app, you can use
+L<AnyEvent::WebSocket::Client> with the L<Twiggy> PSGI server.
+
+=head2 Catalyst
+
+Like Dancer, you can use L<AnyEvent::WebSocket::Client> and L<Twiggy> to use
+Mercury in your Catalyst app.
+
+=head2 JavaScript
+
+For simple applications that only need some peer-to-peer message passing, you
+can directly connect clients to Mercury.
+
 =head1 SEE ALSO
 
 =over 4
