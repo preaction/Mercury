@@ -4,7 +4,7 @@ mercury - A message broker for WebSockets
 
 # VERSION
 
-version 0.005
+version 0.006
 
 # STATUS
 
@@ -151,6 +151,28 @@ Each of the following examples will match the origin
 This is not a comprehensive security measure. The server is trusting that the
 client is not lying about its `Origin`. The client can claim any origin it
 wants.
+
+# USAGE
+
+## Mojolicious
+
+To use Mercury to communicate between Mojolicious server processes, use
+[Mojo::UserAgent's websocket method](https://metacpan.org/pod/Mojo::UserAgent#websocket).
+
+## Dancer
+
+To use Mercury inside of a [Dancer](https://metacpan.org/pod/Dancer) or [Dancer2](https://metacpan.org/pod/Dancer2) app, you can use
+[AnyEvent::WebSocket::Client](https://metacpan.org/pod/AnyEvent::WebSocket::Client) with the [Twiggy](https://metacpan.org/pod/Twiggy) PSGI server.
+
+## Catalyst
+
+Like Dancer, you can use [AnyEvent::WebSocket::Client](https://metacpan.org/pod/AnyEvent::WebSocket::Client) and [Twiggy](https://metacpan.org/pod/Twiggy) to use
+Mercury in your Catalyst app.
+
+## JavaScript
+
+For simple applications that only need some peer-to-peer message passing, you
+can directly connect clients to Mercury.
 
 # SEE ALSO
 

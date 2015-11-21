@@ -1,6 +1,11 @@
 Changelog for Mojolicious-Broker
 
-0.005 2015-10-09T05:38:21
+0.006 2015-11-21T00:41:48
+ - added rudimentary echo parameter to bus
+ - add usage help
+ - add chat example application
+
+0.005 2015-10-09T05:38:21Z
  - fix test failure when re-using Test::Mojo object
  - break single broker test into pattern tests
  - fix link to the mercury broker command in docs
