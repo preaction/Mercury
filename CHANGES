@@ -1,6 +1,12 @@
 Changelog for Mojolicious-Broker
 
-0.006 2015-11-21T00:41:48
+0.007 2015-12-13T23:22:32
+ - add link to website in main doc
+ - add informational website
+ - move example js code into single file
+ - fix pubsub in example application
+
+0.006 2015-11-21T00:41:48Z
  - added rudimentary echo parameter to bus
  - add usage help
  - add chat example application

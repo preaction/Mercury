@@ -4,7 +4,7 @@ mercury - A message broker for WebSockets
 
 # VERSION
 
-version 0.006
+version 0.007
 
 # STATUS
 
@@ -176,6 +176,7 @@ can directly connect clients to Mercury.
 
 # SEE ALSO
 
+- [The Mercury web site](http://preaction.me/mercury)
 - [socket.io](http://socket.io)
 
     A JavaScript WebSocket messaging library (client and server). For a
