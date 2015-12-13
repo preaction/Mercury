@@ -178,6 +178,8 @@ can directly connect clients to Mercury.
 
 =over 4
 
+=item L<The Mercury web site|http://preaction.me/mercury>
+
 =item L<socket.io|http://socket.io>
 
 A JavaScript WebSocket messaging library (client and server). For a
