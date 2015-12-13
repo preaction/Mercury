@@ -2,14 +2,7 @@
 % layout 'standard';
 % title 'Mercury Message Broker';
 
-%= javascript begin
-
-    function open_ws( path ) {
-        var root = 'ws://' + $( '#url-root' ).val();
-        return new WebSocket( root + path );
-    }
-
-% end
+<script src="example.js"></script>
 
 <div class="container">
 

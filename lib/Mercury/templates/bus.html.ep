@@ -79,55 +79,11 @@
 
 %= javascript begin
 
-    var ws = [];
-    var topic = [];
-
-    function send_bus_message( i ) {
-        var message = $( '#peer-' + i + '-message' ).val();
-        ws[i].send( message );
-        $( '#peer-' + i + '-log' ).prepend( '<p>&lt; ' + message + '</p>' );
-        $( '#peer-' + i + '-message' ).val('');
-    }
-
-    function send ( event ) {
-        event.preventDefault();
-        var id = event.target.id;
-        var i = id.substr( 5, 1 );
-
-        var new_topic = $( '#peer-' + i + '-topic' ).val();
-        if ( topic[i] != new_topic ) {
-            if ( ws[i] ) {
-                $( '#peer-' + i + '-log' ).prepend( '<p>### Disconnected</p>' );
-                $( '#peer-' + i + '-topic-field' ).removeClass( 'has-success' );
-                ws[i].close();
-                ws[i].onclose = undefined;
-            }
-
-            ws[i] = open_ws( '<%= url_for( 'bus' )->path %>' + new_topic );
-            ws[i].onopen = function () {
-                $( '#peer-' + i + '-log' ).prepend( '<p>### Connected to /' + new_topic + '</p>' );
-                send_bus_message( i );
-                topic[i] = new_topic;
-                $( '#peer-' + i + '-topic-field' ).addClass( 'has-success' );
-            };
-            ws[i].onclose = function ( ) {
-                $( '#peer-' + i + '-log' ).prepend( '<p>### Disconnected</p>' );
-                $( '#peer-' + i + '-topic-field' ).removeClass( 'has-success' );
-                topic[i] = undefined;
-                ws[i] = undefined;
-            };
-            ws[i].onmessage = function ( event ) {
-                $( '#peer-' + i + '-log' ).prepend( '<p>RECV&gt; ' + event.data + '</p>' );
-            };
-            $( '#peer-' + i + '-log' ).prepend( '<p>### Connecting</p>' );
-        }
-        else {
-            send_bus_message( i );
-        }
-    }
-
     $(function(){
-        $( '.peer-form' ).on( 'submit', send );
+        $( '.peer-form' ).on( 'submit', function ( e ) {
+            var id = e.target.id.substr( 0, 6 );
+            connect_recv( e, id, '<%= url_for( 'bus' )->path %>' );
+        } );
     });
 
 % end
