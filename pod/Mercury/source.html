@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="/mercury/theme/css/normalize.css" rel="stylesheet">
+        <link href="/mercury/theme/css/skeleton.css" rel="stylesheet">
+        <link href="/mercury/theme/css/statocles-default.css" rel="stylesheet">
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+        <title>Mercury</title>
+        <meta content="Statocles 0.060" name="generator">
+        <link href="http://fonts.googleapis.com/css?family=Forum" rel="stylesheet" type="text/css">
+<style>
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Forum', sans-serif;
+        font-weight: bold;
+    }
+
+    #index-banner {
+        font-family: 'Forum', sans-serif;
+        height: 300px;
+        position: relative;
+        margin-bottom: 1em;
+        border-bottom: 1px solid #777
+    }
+    #index-banner:before, #index-banner:after {
+        width: 60px;
+        height: 300px;
+        /*content: url(http://preaction.me/mercury//theme/images/column.png);*/
+    }
+    #index-banner:before {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    #index-banner:after {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    #index-banner h1 {
+        padding-top: 1em;
+        text-transform: uppercase;
+        font-size: 72px;
+        text-align: center;
+    }
+    #index-banner h1 small {
+        display: block;
+        font-size: 24px;
+    }
+
+    #index-banner .latest-release {
+        text-align: center;
+    }
+
+</style>
+
+    </head>
+    <body>
+        <header>
+            <nav class="navbar">
+                <div class="container">
+                    <a class="brand" href="/mercury/">Mercury</a>
+                    <ul>
+                        <li>
+                            <a href="/mercury/blog">Blog</a>
+                        </li>
+                        <li>
+                            <a href="/mercury/pod">Docs</a>
+                        </li>
+                        <li>
+                            <a href="http://preaction.me:3000/">Demo</a>
+                        </li>
+                        <li>
+                            <a href="http://github.com/preaction/Mercury">Code</a>
+                        </li>
+                        <li>
+                            <a href="http://github.com/preaction/Mercury/issues">Bugs</a>
+                        </li>
+                        <li>
+                            <a href="http://metacpan.org/pod/Mercury">CPAN</a>
+                        </li>
+                        <li>
+                            <a href="https://chat.mibbit.com/?channel=%23statocles&amp;server=irc.perl.org">IRC</a>
+                        </li>
+                    </ul>
+                    
+                </div>
+            </nav>
+            
+        </header>
+        <div class="main container">
+            <a class="button" href="/mercury/pod/">
+    Back to documentation
+</a>
+<pre>#!/usr/bin/env perl
+# ABSTRACT: A message broker for WebSockets
+# PODNAME: mercury
+
+use strict;
+use warnings;
+
+require Mojolicious::Commands;
+Mojolicious::Commands-&gt;start_app(&#39;Mercury&#39;);
+
+__END__
+
+=head1 SYNOPSIS
+
+    mercury broker [-l &lt;listen&gt;]
+
+=head1 DESCRIPTION
+
+This is a message broker that enables some common messaging patterns over
+WebSockets.
+
+WebSockets are a powerful tool, enabling many features previously impossible,
+difficult, or ugly for web developers to implement. Where once only an HTTP
+request could get data from a server, now a persistent socket can allow the
+server to send updates without the client needing to specifically request it.
+
+=head2 Server-side Communication
+
+WebSockets do not need to be a communication channel purely between browser and
+server. The Mojolicious web framework has excellent support for WebSockets.
+Using that support, we can communicate between different server processes.
+
+This solves the problem with client-to-client communication in a parallelized
+web server where all clients may not be connected to the same server process.
+The server processes can use a central message broker to coordinate and pass
+messages from one client to another.
+
+=head2 Message Bus
+
+A message bus allows for all connected peers to send and receive messages in a
+group.
+
+Requesting a WebSocket from the URL C&lt;/bus/fry&gt; joins the peer-to-peer message
+bus topic C&lt;fry&gt;. All peers joined to the same topic will receive all the
+messages published to that topic by other peers.
+
+This is useful for sharing state changes between multiple peers, for example,
+in a forking web app server like L&lt;Hypnotoad&gt; or L&lt;Starman&gt;.
+
+=head2 Pub/Sub Messaging
+
+The pub/sub pattern allows for 1-to-many delivery of messages from one
+publisher to any number of active subscribers.
+
+Requesting a WebSocket from the URL C&lt;/sub/leela&gt; creates a subscription to the
+topic C&lt;leela&gt;. Requesting a WebSocket from the URL C&lt;/pub/leela&gt; allows
+sending messages to the C&lt;leela&gt; topic, which are then received by all the
+subscribers.
+
+Topics are heirarchical to allow for broad subscriptions without requring more
+sockets. A subscription to the topic C&lt;wong&gt; receives all messages published to
+the topic C&lt;wong&gt; or any child topic like C&lt;wong/amy&gt; or C&lt;wong/leo&gt;.
+
+This pattern is useful for keeping clients informed of backend processes,
+tapping into an event or logging stream.
+
+=head2 Push/Pull
+
+Push/pull deals out messages in a round-robin manner. Pushers send messages
+which are handled by a single puller.
+
+Handlers request WebSockets from the URL C&lt;/pull/bender&gt;. Senders request
+WebSockets from the URL C&lt;/push/bender&gt;. Senders send messages which will
+be received by a single handler.
+
+This pattern is useful for load balancing incoming updates, or creating
+processing pipelines using multiple push/pull endpoints.
+
+=head2 Example App
+
+In C&lt;development&gt; mode (the default), the broker provides an example
+application to test the messaging patterns.
+
+You can change the mode by using the C&lt;-m&gt; flag to the L&lt;C&lt;mercury broker&gt;
+command|Mercury::Command::mercury::broker&gt; or the C&lt;MOJO_MODE&gt; environment
+variable.
+
+=head1 CONFIGURATION
+
+You can have an optional configuration file C&lt;mercury.conf&gt; in the current
+working directory. The configuration file is a Perl hash, with the broker
+configuration in the C&lt;broker&gt; key, like so:
+
+    # mercury.conf
+    {
+        broker =&gt; {
+            listen =&gt; &quot;http://*:4000&quot;,
+            allow_origin =&gt; [
+                &#39;example.com&#39;,
+            ],
+        },
+    }
+
+The individual configuration keys are:
+
+=head2 listen
+
+    # mercury.conf
+    {
+        broker =&gt; {
+            listen =&gt; &quot;http://*:4000&quot;,
+        },
+    }
+
+You can set the default for the C&lt;-l|--listen&gt; option in the configuration
+file.
+
+=head2 allow_origin
+
+    # mercury.conf
+    {
+        broker =&gt; {
+            allow_origin =&gt; [
+                &#39;example.com&#39;,
+            ],
+        },
+    }
+
+Instead of CORS (used by Ajax), WebSockets send an C&lt;Origin&gt; header with the
+initial handshake. This header contains the protocol, host, and port used by
+the page requesting the socket.
+
+As a basic security measure, you can configure the allowed origin values with
+the C&lt;allow_origin&gt; configuration key. When this is set, only WebSocket
+handshakes with an C&lt;Origin&gt; header matching one of the values will be allowed.
+If there is no C&lt;Origin&gt; header, or the header does not match, the connection
+will be denied with a C&lt;401 Unauthorized&gt; response.
+
+C&lt;allow_origin&gt; key can be a single string, or an array of strings, containing
+a string to match against the incoming C&lt;Origin&gt; header. The C&lt;*&gt; character is
+a wildcard.
+
+Each of the following examples will match the origin
+C&lt;http://www.example.com:3000&gt;.
+
+    example.com
+    *.example.com
+    *://www.example.com
+    http://www.example.com:*
+
+This is not a comprehensive security measure. The server is trusting that the
+client is not lying about its C&lt;Origin&gt;. The client can claim any origin it
+wants.
+
+=head1 USAGE
+
+=head2 Mojolicious
+
+To use Mercury to communicate between Mojolicious server processes, use
+L&lt;Mojo::UserAgent&#39;s websocket method|Mojo::UserAgent/websocket&gt;.
+
+=head2 Dancer
+
+To use Mercury inside of a L&lt;Dancer&gt; or L&lt;Dancer2&gt; app, you can use
+L&lt;AnyEvent::WebSocket::Client&gt; with the L&lt;Twiggy&gt; PSGI server.
+
+=head2 Catalyst
+
+Like Dancer, you can use L&lt;AnyEvent::WebSocket::Client&gt; and L&lt;Twiggy&gt; to use
+Mercury in your Catalyst app.
+
+=head2 JavaScript
+
+For simple applications that only need some peer-to-peer message passing, you
+can directly connect clients to Mercury.
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L&lt;socket.io|http://socket.io&gt;
+
+A JavaScript WebSocket messaging library (client and server). For a
+socket.io-compatible server written in Perl, see L&lt;PocketIO&gt;.
+
+=item L&lt;zeromq|http://zeromq.org&gt;
+
+A socket library that provides communication patterns for scalability.
+The inspiration to build Mercury (Mercury requires only Perl 5.10 or higher).
+For a Perl API to ZeroMQ, see L&lt;ZMQ::FFI&gt;.
+
+=item L&lt;nanomsg|http://nanomsg.org&gt;
+
+A socket library that provides communication patterns for scalability. The
+successor to ZeroMQ. The inspiration of the features provided by Mercury. For a
+Perl API, see L&lt;NanoMsg::Raw&gt;.
+
+=back
+
+</pre>
+
+        </div>
+        <footer>
+            
+            <div class="container tagline">
+                <a href="http://preaction.me/statocles">Made with Statocles</a><br>
+                <a href="http://www.perl.org">Powered by Perl</a>
+            </div>
+        </footer>
+    </body>
+</html>

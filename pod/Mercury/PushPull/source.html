@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="/mercury/theme/css/normalize.css" rel="stylesheet">
+        <link href="/mercury/theme/css/skeleton.css" rel="stylesheet">
+        <link href="/mercury/theme/css/statocles-default.css" rel="stylesheet">
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+        <title>Mercury</title>
+        <meta content="Statocles 0.060" name="generator">
+        <link href="http://fonts.googleapis.com/css?family=Forum" rel="stylesheet" type="text/css">
+<style>
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Forum', sans-serif;
+        font-weight: bold;
+    }
+
+    #index-banner {
+        font-family: 'Forum', sans-serif;
+        height: 300px;
+        position: relative;
+        margin-bottom: 1em;
+        border-bottom: 1px solid #777
+    }
+    #index-banner:before, #index-banner:after {
+        width: 60px;
+        height: 300px;
+        /*content: url(http://preaction.me/mercury//theme/images/column.png);*/
+    }
+    #index-banner:before {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    #index-banner:after {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    #index-banner h1 {
+        padding-top: 1em;
+        text-transform: uppercase;
+        font-size: 72px;
+        text-align: center;
+    }
+    #index-banner h1 small {
+        display: block;
+        font-size: 24px;
+    }
+
+    #index-banner .latest-release {
+        text-align: center;
+    }
+
+</style>
+
+    </head>
+    <body>
+        <header>
+            <nav class="navbar">
+                <div class="container">
+                    <a class="brand" href="/mercury/">Mercury</a>
+                    <ul>
+                        <li>
+                            <a href="/mercury/blog">Blog</a>
+                        </li>
+                        <li>
+                            <a href="/mercury/pod">Docs</a>
+                        </li>
+                        <li>
+                            <a href="http://preaction.me:3000/">Demo</a>
+                        </li>
+                        <li>
+                            <a href="http://github.com/preaction/Mercury">Code</a>
+                        </li>
+                        <li>
+                            <a href="http://github.com/preaction/Mercury/issues">Bugs</a>
+                        </li>
+                        <li>
+                            <a href="http://metacpan.org/pod/Mercury">CPAN</a>
+                        </li>
+                        <li>
+                            <a href="https://chat.mibbit.com/?channel=%23statocles&amp;server=irc.perl.org">IRC</a>
+                        </li>
+                    </ul>
+                    
+                </div>
+            </nav>
+            
+        </header>
+        <div class="main container">
+            <a class="button" href="/mercury/pod/Mercury/PushPull/">
+    Back to documentation
+</a>
+<pre>package Mercury::PushPull;
+# ABSTRACT: Push/pull message pattern
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+=cut
+
+use Mojo::Base &#39;Mojo&#39;;
+
+=attr topic
+
+This object&#39;s topic, for accounting purposes.
+
+=cut
+
+has &#39;topic&#39;;
+
+=attr pullers
+
+Connected websockets ready to receive messages.
+
+=cut
+
+has pullers =&gt; sub { [] };
+
+=attr pushers
+
+Connected websockets who will be pushing messages.
+
+=cut
+
+has pushers =&gt; sub { [] };
+
+=attr current_puller_index
+
+The puller we will use to send the next message from a pusher.
+
+=cut
+
+has current_puller_index =&gt; sub { 0 };
+
+=method add_puller
+
+    $pat-&gt;add_puller( $c );
+
+Add a puller to this broker. Pullers are given messages in a round-robin, one
+at a time, by pushers.
+
+=cut
+
+sub add_puller {
+    my ( $self, $c ) = @_;
+    $c-&gt;on( finish =&gt; sub {
+        my ( $c ) = @_;
+        $self-&gt;remove_puller( $c );
+    } );
+    push @{ $self-&gt;pullers }, $c;
+    return;
+}
+
+=method add_pusher
+
+    $pat-&gt;add_pusher( $c );
+
+Add a pusher to this broker. Pushers send messages to be processed by pullers.
+
+=cut
+
+sub add_pusher {
+    my ( $self, $c ) = @_;
+    $c-&gt;on( message =&gt; sub {
+        my ( $c, $msg ) = @_;
+        $self-&gt;send_message( $msg );
+    } );
+    $c-&gt;on( finish =&gt; sub {
+        my ( $c ) = @_;
+        $self-&gt;remove_pusher( $c );
+    } );
+    push @{ $self-&gt;pushers }, $c;
+    return;
+}
+
+=method send_message
+
+    $pat-&gt;send_message( $msg );
+
+Send the given message to the next puller in line.
+
+=cut
+
+sub send_message {
+    my ( $self, $msg ) = @_;
+    my $i = $self-&gt;current_puller_index;
+    my @pullers = @{ $self-&gt;pullers };
+    $pullers[ $i ]-&gt;send( $msg );
+    $self-&gt;current_puller_index( ( $i + 1 ) % @pullers );
+    return;
+}
+
+=method remove_puller
+
+    $pat-&gt;remove_puller( $c );
+
+Remove a puller from the list. Called automatically when the puller socket
+is closed.
+
+=cut
+
+sub remove_puller {
+    my ( $self, $c ) = @_;
+    my @pullers = @{ $self-&gt;pullers };
+    for my $i ( 0.. $#pullers ) {
+        if ( $pullers[$i] eq $c ) {
+            splice @{ $self-&gt;pullers }, $i, 1;
+            my $current_puller_index = $self-&gt;current_puller_index;
+            if ( $i &gt; 0 &amp;&amp; $current_puller_index &gt;= $i ) {
+                $self-&gt;current_puller_index( $current_puller_index - 1 );
+            }
+            return;
+        }
+    }
+}
+
+=method remove_pusher
+
+    $pat-&gt;remove_pusher( $c );
+
+Remove a pusher from the list. Called automatically when the pusher socket
+is closed.
+
+=cut
+
+sub remove_pusher {
+    my ( $self, $c ) = @_;
+    my @pushers = @{ $self-&gt;pushers };
+    for my $i ( 0.. $#pushers ) {
+        if ( $pushers[$i] eq $c ) {
+            splice @pushers, $i, 1;
+            return;
+        }
+    }
+}
+
+1;
+</pre>
+
+        </div>
+        <footer>
+            
+            <div class="container tagline">
+                <a href="http://preaction.me/statocles">Made with Statocles</a><br>
+                <a href="http://www.perl.org">Powered by Perl</a>
+            </div>
+        </footer>
+    </body>
+</html>

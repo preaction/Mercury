@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="/mercury/theme/css/normalize.css" rel="stylesheet">
+        <link href="/mercury/theme/css/skeleton.css" rel="stylesheet">
+        <link href="/mercury/theme/css/statocles-default.css" rel="stylesheet">
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+        <title>Mercury</title>
+        <meta content="Statocles 0.060" name="generator">
+        <link href="http://fonts.googleapis.com/css?family=Forum" rel="stylesheet" type="text/css">
+<style>
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Forum', sans-serif;
+        font-weight: bold;
+    }
+
+    #index-banner {
+        font-family: 'Forum', sans-serif;
+        height: 300px;
+        position: relative;
+        margin-bottom: 1em;
+        border-bottom: 1px solid #777
+    }
+    #index-banner:before, #index-banner:after {
+        width: 60px;
+        height: 300px;
+        /*content: url(http://preaction.me/mercury//theme/images/column.png);*/
+    }
+    #index-banner:before {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    #index-banner:after {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    #index-banner h1 {
+        padding-top: 1em;
+        text-transform: uppercase;
+        font-size: 72px;
+        text-align: center;
+    }
+    #index-banner h1 small {
+        display: block;
+        font-size: 24px;
+    }
+
+    #index-banner .latest-release {
+        text-align: center;
+    }
+
+</style>
+
+    </head>
+    <body>
+        <header>
+            <nav class="navbar">
+                <div class="container">
+                    <a class="brand" href="/mercury/">Mercury</a>
+                    <ul>
+                        <li>
+                            <a href="/mercury/blog">Blog</a>
+                        </li>
+                        <li>
+                            <a href="/mercury/pod">Docs</a>
+                        </li>
+                        <li>
+                            <a href="http://preaction.me:3000/">Demo</a>
+                        </li>
+                        <li>
+                            <a href="http://github.com/preaction/Mercury">Code</a>
+                        </li>
+                        <li>
+                            <a href="http://github.com/preaction/Mercury/issues">Bugs</a>
+                        </li>
+                        <li>
+                            <a href="http://metacpan.org/pod/Mercury">CPAN</a>
+                        </li>
+                        <li>
+                            <a href="https://chat.mibbit.com/?channel=%23statocles&amp;server=irc.perl.org">IRC</a>
+                        </li>
+                    </ul>
+                    
+                </div>
+            </nav>
+            
+        </header>
+        <div class="main container">
+            <a class="button" href="/mercury/pod/Mercury/Command/mercury/broker/">
+    Back to documentation
+</a>
+<pre>package Mercury::Command::mercury::broker;
+# ABSTRACT: Mercury message broker command
+
+=head1 SYNOPSIS
+
+  Usage: mercury broker [OPTIONS]
+
+    mercury broker
+    mercury broker -m production -l http://*:8080
+    mercury broker -l http://127.0.0.1:8080 -l https://[::]:8081
+    mercury broker -l &#39;https://*:443?cert=./server.crt&amp;key=./server.key&#39;
+
+  Options:
+    -m, --mode &lt;mode&gt;                    Set the mode, defaults to the value
+                                         of MOJO_MODE, PLACK_ENV, or 
+                                         &quot;development&quot;
+    -b, --backlog &lt;size&gt;                 Listen backlog size, defaults to
+                                         SOMAXCONN
+    -c, --clients &lt;number&gt;               Maximum number of concurrent
+                                         connections, defaults to 1000
+    -i, --inactivity-timeout &lt;seconds&gt;   Inactivity timeout, defaults to 20
+                                         minutes
+    -l, --listen &lt;location&gt;              One or more locations you want to
+                                         listen on, defaults to the value of
+                                         MOJO_LISTEN or &quot;http://*:3000&quot;
+    -p, --proxy                          Activate reverse proxy support,
+                                         defaults to the value of
+                                         MOJO_REVERSE_PROXY
+
+=head1 DESCRIPTION
+
+L&lt;Mercury::Command::broker&gt; starts the L&lt;Mercury&gt; application.
+
+=cut
+
+use Mojo::Base &#39;Mojolicious::Command&#39;;
+use Mercury;
+
+use Getopt::Long qw(GetOptionsFromArray :config no_auto_abbrev no_ignore_case);
+use Mojo::Server::Daemon;
+
+=attr description
+
+    my $description = $cmd-&gt;description;
+    $cmd = $cmd-&gt;description(&#39;Foo&#39;);
+
+Short description of this command, used for the command list.
+
+=cut
+
+has description =&gt; &#39;Start WebSocket message broker&#39;;
+
+=attr usage
+
+    my $usage = $cmd-&gt;usage;
+    $cmd = $cmd-&gt;usage(&#39;Foo&#39;);
+
+Usage information for this command, used for the help screen.
+
+=cut
+
+has usage =&gt; sub { shift-&gt;extract_usage };
+
+=method run
+
+  $cmd-&gt;run(@ARGV);
+
+Run this command.
+
+=cut
+
+sub run {
+    my ( $self, @args ) = @_;
+
+    # If we&#39;re started with the &#39;mercury&#39; script, we&#39;re our own app and we need
+    # to serve ourselves. This ensures that the initialization already done
+    # isn&#39;t done twice.
+    my $app = $self-&gt;app-&gt;isa( &#39;Mercury&#39; ) ? $self-&gt;app : Mercury-&gt;new;
+
+    my $daemon = Mojo::Server::Daemon-&gt;new(
+        app =&gt; $app,
+        inactivity_timeout =&gt; 1200,
+    );
+
+    GetOptionsFromArray( \@args,
+        &#39;b|backlog=i&#39; =&gt; sub { $daemon-&gt;backlog($_[1]) },
+        &#39;c|clients=i&#39; =&gt; sub { $daemon-&gt;max_clients($_[1]) },
+        &#39;i|inactivity-timeout=i&#39; =&gt; sub { $daemon-&gt;inactivity_timeout($_[1]) },
+        &#39;l|listen=s&#39; =&gt; \my @listen,
+        &#39;p|proxy&#39; =&gt; sub { $daemon-&gt;reverse_proxy(1) },
+    );
+
+    if ( @listen ) {
+        $daemon-&gt;listen(\@listen);
+    }
+    elsif ( my $conf = eval { $app-&gt;config-&gt;{ broker } } ) {
+        if ( $conf-&gt;{listen} ) {
+            $daemon-&gt;listen( [ $conf-&gt;{listen} ] );
+        }
+    }
+
+    $daemon-&gt;run;
+}
+
+1;
+__END__
+
+=head1 SEE ALSO
+
+=over 4
+
+=item *
+
+L&lt;mercury&gt;
+
+=back
+
+</pre>
+
+        </div>
+        <footer>
+            
+            <div class="container tagline">
+                <a href="http://preaction.me/statocles">Made with Statocles</a><br>
+                <a href="http://www.perl.org">Powered by Perl</a>
+            </div>
+        </footer>
+    </body>
+</html>
