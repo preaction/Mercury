@@ -91,7 +91,7 @@ sub add_topic_subscriber {
 
 =method remove_topic_subscriber
 
-    $c->remote_topic_subscriber( $topic );
+    $c->remove_topic_subscriber( $topic );
 
 Remove the current connection from the given topic. Must be called to clean up
 the state.
@@ -125,12 +125,12 @@ sub publish_topic_message {
 
 =route /bus/*topic
 
-Establish a WebSocket message bus to send/recieve messages on the given
+Establish a WebSocket message bus to send/receive messages on the given
 C<topic>. All clients connected to the topic will receive all messages
 published on the topic.
 
 This is a shorter way of doing both C</pub/*topic> and C</sub/*topic>,
-without the hierarchal message passing.
+without the hierarchical message passing.
 
 One difference is that by default a sender will not receive a message
 that they sent. To enable this behavior, pass a true value as the C<echo>
