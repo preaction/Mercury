@@ -198,6 +198,11 @@ can directly connect clients to Mercury.
 
 Doug Bell <preaction@cpan.org>
 
+# CONTRIBUTORS
+
+- Joel Berger <joel.a.berger@gmail.com>
+- William Lindley <wlindley@wlindley.com>
+
 # COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2015 by Doug Bell.
