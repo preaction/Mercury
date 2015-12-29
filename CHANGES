@@ -1,6 +1,14 @@
 Changelog for Mojolicious-Broker
 
-0.007 2015-12-13T23:22:32
+0.008 2015-12-29T14:20:29
+ - Correct function name in documentation, and minor typos
+ - add Rexfile to deploy the demo Mercury app
+ - add example daemon init script
+ - add irc meta information
+ - change homepage in meta resources
+ - add release v0.007 announcement
+
+0.007 2015-12-13T23:22:32Z
  - add link to website in main doc
  - add informational website
  - move example js code into single file
