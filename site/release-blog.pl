@@ -28,7 +28,7 @@ sub main {
         return 1;
     }
 
-    my $full_log = $git->run( log => '--pretty=%H %s%n%n%b---', "$tags[$tag_idx-1]..$tags[$tag_idx]" );
+    my $full_log = $git->run( log => '--no-merges', '--pretty=%H %s%n%n%b---', "$tags[$tag_idx-1]..$tags[$tag_idx]" );
 
     for my $log ( split /\n---\n?/, $full_log ) {
         my ( $first, undef, $body ) = split /\n/, $log, 3;
