@@ -18,7 +18,6 @@ use Mojo::Base 'Mojolicious';
 use Scalar::Util qw( refaddr );
 use File::Basename qw( dirname );
 use File::Spec::Functions qw( catdir );
-use Mercury::PushPull;
 
 my %pubsub_topics;
 my %bus_topics;
@@ -197,36 +196,6 @@ sub route_websocket_pub {
     } );
 }
 
-=route /pull/*topic
-
-Establish a WebSocket to pull messages from the given C<topic>. Messages will
-be routed in a round-robin fashion from pushers.
-
-=cut
-
-sub route_websocket_pull {
-    my ( $c ) = @_;
-    Mojo::IOLoop->stream($c->tx->connection)->timeout(1200);
-    my $topic = $c->stash( 'topic' );
-    my $pat = $pushpull{ $topic } ||= Mercury::PushPull->new( topic => $topic );
-    $pat->add_puller( $c );
-};
-
-=route /push/*topic
-
-Establish a WebSocket to push messages to the given C<topic>. Messages will be
-routed in a round-robin fashion to a single puller.
-
-=cut
-
-sub route_websocket_push {
-    my ( $c ) = @_;
-    Mojo::IOLoop->stream($c->tx->connection)->timeout(1200);
-    my $topic = $c->stash( 'topic' );
-    my $pat = $pushpull{ $topic } ||= Mercury::PushPull->new( topic => $topic );
-    $pat->add_pusher( $c );
-}
-
 sub startup {
     my ( $app ) = @_;
     $app->plugin( 'Config', { default => { broker => { } } } );
@@ -263,8 +232,14 @@ sub startup {
     $r->websocket( '/sub/*topic' )->to( cb => \&route_websocket_sub )->name( 'sub' );
     $r->websocket( '/pub/*topic' )->to( cb => \&route_websocket_pub )->name( 'pub' );
     $r->websocket( '/bus/*topic' )->to( cb => \&route_websocket_bus )->name( 'bus' );
-    $r->websocket( '/push/*topic' )->to( cb => \&route_websocket_push )->name( 'push' );
-    $r->websocket( '/pull/*topic' )->to( cb => \&route_websocket_pull )->name( 'pull' );
+
+    $app->plugin( 'Mercury' );
+    $r->websocket( '/push/*topic' )
+      ->to( controller => 'PushPull', action => 'push' )
+      ->name( 'push' );
+    $r->websocket( '/pull/*topic' )
+      ->to( controller => 'PushPull', action => 'pull' )
+      ->name( 'pull' );
 
     if ( $app->mode eq 'development' ) {
         # Enable the example app

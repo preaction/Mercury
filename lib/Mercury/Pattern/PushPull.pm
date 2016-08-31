@@ -1,21 +1,48 @@
-package Mercury::PushPull;
-# ABSTRACT: Push/pull message pattern
+package Mercury::Pattern::PushPull;
+
+# ABSTRACT: Manage a push/pull pattern for a single topic
 
 =head1 SYNOPSIS
 
+    # Connect the pusher
+    my $push_ua = Mojo::UserAgent->new;
+    my $push_tx = $ua->websocket( '/push/foo' );
+
+    # Connect the puller socket
+    my $pull_ua = Mojo::UserAgent->new;
+    my $pull_tx = $ua->websocket( '/pull/foo' );
+
+    # Connect the two sockets using push/pull
+    my $pattern = Mercury::Pattern::PushPull->new;
+    $pattern->add_pusher( $push_tx );
+    $pattern->add_puller( $pull_tx );
+
+    # Send a message
+    $pull_tx->on( message => sub {
+        my ( $tx, $msg ) = @_;
+        print $msg; # Hello, World!
+    } );
+    $push_tx->send( 'Hello, World!' );
+
 =head1 DESCRIPTION
+
+This pattern connects pushers, which send messages, to pullers, which
+recieve messages. Each message sent by a pusher will be received by
+a single puller. This pattern is useful for dealing out jobs to workers.
+
+=head1 SEE ALSO
+
+=over
+
+=item L<Mercury::Controller::PushPull>
+
+=item L<Mercury>
+
+=back
 
 =cut
 
 use Mojo::Base 'Mojo';
-
-=attr topic
-
-This object's topic, for accounting purposes.
-
-=cut
-
-has 'topic';
 
 =attr pullers
 
@@ -43,7 +70,7 @@ has current_puller_index => sub { 0 };
 
 =method add_puller
 
-    $pat->add_puller( $c );
+    $pat->add_puller( $tx );
 
 Add a puller to this broker. Pullers are given messages in a round-robin, one
 at a time, by pushers.
@@ -51,34 +78,34 @@ at a time, by pushers.
 =cut
 
 sub add_puller {
-    my ( $self, $c ) = @_;
-    $c->on( finish => sub {
-        my ( $c ) = @_;
-        $self->remove_puller( $c );
+    my ( $self, $tx ) = @_;
+    $tx->on( finish => sub {
+        my ( $tx ) = @_;
+        $self->remove_puller( $tx );
     } );
-    push @{ $self->pullers }, $c;
+    push @{ $self->pullers }, $tx;
     return;
 }
 
 =method add_pusher
 
-    $pat->add_pusher( $c );
+    $pat->add_pusher( $tx );
 
 Add a pusher to this broker. Pushers send messages to be processed by pullers.
 
 =cut
 
 sub add_pusher {
-    my ( $self, $c ) = @_;
-    $c->on( message => sub {
-        my ( $c, $msg ) = @_;
+    my ( $self, $tx ) = @_;
+    $tx->on( message => sub {
+        my ( $tx, $msg ) = @_;
         $self->send_message( $msg );
     } );
-    $c->on( finish => sub {
-        my ( $c ) = @_;
-        $self->remove_pusher( $c );
+    $tx->on( finish => sub {
+        my ( $tx ) = @_;
+        $self->remove_pusher( $tx );
     } );
-    push @{ $self->pushers }, $c;
+    push @{ $self->pushers }, $tx;
     return;
 }
 
@@ -101,7 +128,7 @@ sub send_message {
 
 =method remove_puller
 
-    $pat->remove_puller( $c );
+    $pat->remove_puller( $tx );
 
 Remove a puller from the list. Called automatically when the puller socket
 is closed.
@@ -109,10 +136,10 @@ is closed.
 =cut
 
 sub remove_puller {
-    my ( $self, $c ) = @_;
+    my ( $self, $tx ) = @_;
     my @pullers = @{ $self->pullers };
     for my $i ( 0.. $#pullers ) {
-        if ( $pullers[$i] eq $c ) {
+        if ( $pullers[$i] eq $tx ) {
             splice @{ $self->pullers }, $i, 1;
             my $current_puller_index = $self->current_puller_index;
             if ( $i > 0 && $current_puller_index >= $i ) {
@@ -125,7 +152,7 @@ sub remove_puller {
 
 =method remove_pusher
 
-    $pat->remove_pusher( $c );
+    $pat->remove_pusher( $tx );
 
 Remove a pusher from the list. Called automatically when the pusher socket
 is closed.
@@ -133,10 +160,10 @@ is closed.
 =cut
 
 sub remove_pusher {
-    my ( $self, $c ) = @_;
+    my ( $self, $tx ) = @_;
     my @pushers = @{ $self->pushers };
     for my $i ( 0.. $#pushers ) {
-        if ( $pushers[$i] eq $c ) {
+        if ( $pushers[$i] eq $tx ) {
             splice @pushers, $i, 1;
             return;
         }
