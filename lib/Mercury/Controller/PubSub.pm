@@ -25,6 +25,8 @@ For more information on the pub/sub pattern, see L<Mercury::Pattern::PubSub>.
 
 =item L<Mercury::Pattern::PubSub>
 
+=item L<Mercury::Controller::PubSub::Cascade>
+
 =item L<Mercury>
 
 =back
