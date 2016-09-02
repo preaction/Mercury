@@ -22,6 +22,9 @@ them to the right Pattern object, and the Pattern object handles passing
 messages between the connected sockets. Controllers can create multiple
 instances of a single Pattern to isolate messages to a single topic.
 
+B<NOTE>: You should read L<the DESCRIPTION section of the main Mercury broker
+documentation|mercury/DESCRIPTION> before reading further.
+
 =head2 Controllers
 
 Controllers are L<Mojolicious::Controller> subclasses with route handlers
@@ -29,13 +32,42 @@ to establish websocket connections and add them to a Pattern. The built-in
 Controllers each handle one pattern, but you can add one socket to multiple
 Patterns to customize your message passing.
 
+B<NOTE>: Since Mercury does not yet have a way for brokers to share messages,
+you must run Mercury as a single process. You cannot run Mercury under
+L<Hypnotoad> like other Mojolicious applications, nor C<prefork> or other
+multi-processing schemes. See L<https://github.com/preaction/Mercury/issues/35>
+to track the clustering feature.
+
 The built-in controllers are:
 
 =over
 
+=item L<Mercury::Controller::PubSub>
+
+Establish a L<Pub/Sub pattern|Mercury::Pattern::PubSub> on a topic.
+Pub/Sub allows publishers to publish messages that will be received by
+all subscribers, useful for event notifications.
+
+=item L<Mercury::Controller::PubSub::Cascade>
+
+Establish a L<Pub/Sub pattern|Mercury::Pattern::PubSub> on a topic in
+a heirarchy, with subscribers to parent topics receiving messages sent
+to child topics. More efficient when dealing with large numbers of
+topics.
+
 =item L<Mercury::Controller::PushPull>
 
 Establish a L<Push/Pull pattern|Mercury::Pattern::PushPull> on a topic.
+Push/Pull allows publishers to publish messages that will be received by
+one and only one subscriber in a round-robin fashion, useful for job
+workers
+
+=item L<Mercury::Controller::Bus>
+
+Establish a L<message bus pattern|Mercury::Pattern::Bus> on a topic.
+The message bus shares all messages sent by connected clients with all
+other clients, useful for chat and games, and sharing state changes
+between peers.
 
 =back
 
@@ -49,10 +81,22 @@ The built-in patterns are:
 
 =over
 
+=item L<Mercury::Pattern::PubSub>
+
+A pub/sub pattern has each message sent by a publisher delivered to all
+connected subscribers. This pattern is useful for event notifications.
+
 =item L<Mercury::Pattern::PushPull>
 
-A push/pull pattern has each message sent by a pusher delivered to one and
-only one puller. This pattern is useful for job workers.
+A push/pull pattern has each message sent by a pusher delivered to one
+and only one puller. This pattern is useful for job workers.
+
+=item L<Mercury::Pattern::Bus>
+
+A bus pattern has each message sent by a client received by all other
+connected clients. This pattern is useful for chat, and is similar to
+combining the publish and subscribe sides of PubSub into a single
+connection.
 
 =back
 

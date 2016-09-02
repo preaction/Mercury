@@ -1,16 +1,26 @@
 package Mercury;
 # ABSTRACT: Main broker application class
 
+=head1 SYNOPSIS
+
+    # Start the broker
+    $ mercury broker
+
+    # To get help
+    $ mercury help broker
+
 =head1 DESCRIPTION
 
-This is the main broker application class. With this class, you can add a
-message broker inside your L<Mojolicious> application.
+This is the main broker application class. This is the standard broker
+application that is started when you use C<mercury broker>.
 
-It is not necessary to use Mojolicious in order to use Mercury. For how to use
-Mercury to broker messages for any application, see L<the main
-Mercury documentation|mercury>. For how to start the broker application, see
-L<the mercury broker command documentation|Mercury::Command::broker> or
-run C<mercury help broker>.
+To learn how to use this application to broker messages, see L<the main
+Mercury documentation|mercury>. For how to start the broker application,
+see L<the mercury broker command documentation|Mercury::Command::broker>
+or run C<mercury help broker>.
+
+To learn how to create a custom message broker to integrate authentication,
+logging, and other customizations, see L<Mojolicious::Plugin::Mercury>.
 
 =cut
 

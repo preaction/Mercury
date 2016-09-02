@@ -180,6 +180,11 @@ can directly connect clients to Mercury.
 
 =item L<The Mercury web site|http://preaction.me/mercury>
 
+=item L<Mojolicious::Plugin::Mercury>
+
+You can use this plugin to create your own message broker with custom
+authentication and logging, custom messaging patterns, and more.
+
 =item L<socket.io|http://socket.io>
 
 A JavaScript WebSocket messaging library (client and server). For a
