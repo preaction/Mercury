@@ -4,11 +4,7 @@ mercury - A message broker for WebSockets
 
 # VERSION
 
-version 0.008
-
-# STATUS
-
-<a href="https://travis-ci.org/preaction/Mercury"><img src="https://travis-ci.org/preaction/Mercury.svg?branch=master"></a><a href="https://coveralls.io/r/preaction/Mercury"><img src="https://coveralls.io/repos/preaction/Mercury/badge.png" alt="Coverage Status" /></a>
+version 0.009
 
 # SYNOPSIS
 
@@ -177,6 +173,11 @@ can directly connect clients to Mercury.
 # SEE ALSO
 
 - [The Mercury web site](http://preaction.me/mercury)
+- [Mojolicious::Plugin::Mercury](https://metacpan.org/pod/Mojolicious::Plugin::Mercury)
+
+    You can use this plugin to create your own message broker with custom
+    authentication and logging, custom messaging patterns, and more.
+
 - [socket.io](http://socket.io)
 
     A JavaScript WebSocket messaging library (client and server). For a
@@ -200,7 +201,9 @@ Doug Bell <preaction@cpan.org>
 
 # CONTRIBUTORS
 
+- Doug Bell <doug@preaction.me>
 - Joel Berger <joel.a.berger@gmail.com>
+- Mohammad S Anwar <mohammad.anwar@yahoo.com>
 - William Lindley <wlindley@wlindley.com>
 
 # COPYRIGHT AND LICENSE

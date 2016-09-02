@@ -1,6 +1,24 @@
 Changelog for Mojolicious-Broker
 
-0.008 2015-12-29T14:20:29
+0.009 2016-09-02T01:23:40
+ - update dist settings from other projects
+ - upgrade perl versions in travis tests
+ - add documentation for the new architecture
+ - move bus pattern into controller/pattern object
+ - move cascading pub/sub into controller
+ - add simple pubsub controller and pattern
+ - refactor push/pull into composable parts
+ - - Auto add key 'provides' to META.* files using the dzil plugin
+   [MetaProvides::Package].   as recommended by CPANTS:
+   http://cpants.cpanauthors.org/dist/Mercury
+ - - Autogenerate META.json using dzil plugin [MetaJSON].
+ - add contributors to README
+ - add mail mapping for contributors
+ - add contributors to docs
+ - add release v0.008 announcement
+ - fix issue listing merges in release blog post
+
+0.008 2015-12-29T14:20:29Z
  - Correct function name in documentation, and minor typos
  - add Rexfile to deploy the demo Mercury app
  - add example daemon init script
@@ -72,4 +90,3 @@ Changelog for Mojolicious-Broker
  - add mojolicious prereq
  - add initial broker app
  - Minting dist
-
