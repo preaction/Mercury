@@ -1,5 +1,7 @@
 Changelog for Mojolicious-Broker
 
+{{ $NEXT }}
+
 0.009 2016-09-02T01:23:40
  - update dist settings from other projects
  - upgrade perl versions in travis tests
