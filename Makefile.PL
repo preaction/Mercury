@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use 5.008;
+use 5.010;
 
 use ExtUtils::MakeMaker;
 
@@ -17,7 +17,7 @@ my %WriteMakefileArgs = (
     "bin/mercury"
   ],
   "LICENSE" => "perl",
-  "MIN_PERL_VERSION" => "5.008",
+  "MIN_PERL_VERSION" => "5.010",
   "NAME" => "Mercury",
   "PREREQ_PM" => {
     "File::Basename" => 0,
@@ -32,7 +32,7 @@ my %WriteMakefileArgs = (
     "IPC::Open3" => 0,
     "Test::More" => "1.001005"
   },
-  "VERSION" => "0.009",
+  "VERSION" => "0.010",
   "test" => {
     "TESTS" => "t/*.t t/controller/*.t"
   }

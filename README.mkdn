@@ -4,7 +4,11 @@ mercury - A message broker for WebSockets
 
 # VERSION
 
-version 0.009
+version 0.010
+
+# STATUS
+
+<a href="https://travis-ci.org/preaction/Mercury"><img src="https://travis-ci.org/preaction/Mercury.svg?branch=master"></a><a href="https://coveralls.io/r/preaction/Mercury"><img src="https://coveralls.io/repos/preaction/Mercury/badge.png" alt="Coverage Status" /></a>
 
 # SYNOPSIS
 
@@ -201,14 +205,13 @@ Doug Bell <preaction@cpan.org>
 
 # CONTRIBUTORS
 
-- Doug Bell <doug@preaction.me>
 - Joel Berger <joel.a.berger@gmail.com>
 - Mohammad S Anwar <mohammad.anwar@yahoo.com>
 - William Lindley <wlindley@wlindley.com>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Doug Bell.
+This software is copyright (c) 2016 by Doug Bell.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

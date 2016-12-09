@@ -2,7 +2,7 @@ requires "File::Basename" => "0";
 requires "File::Spec::Functions" => "0";
 requires "Mojolicious" => "6.00";
 requires "Scalar::Util" => "0";
-requires "perl" => "5.008";
+requires "perl" => "5.010";
 
 on 'test' => sub {
   requires "ExtUtils::MakeMaker" => "0";
