@@ -1,5 +1,5 @@
 package Mercury::Pattern::Bus;
-
+our $VERSION = '0.010';
 # ABSTRACT: A messaging pattern where all peers share messages
 
 =head1 SYNOPSIS
