@@ -48,6 +48,20 @@ subtest 'peer 3' => sub {
     }
 };
 
+subtest 'post to bus' => sub {
+    my $t = Test::Mojo->new( $app );
+    $t->post_ok( '/bus/foo' => 'Hello 4' )
+        ->status_is( 200 )
+        ->content_is( '' )
+        ;
+
+    for my $i ( 0 .. 3 ) {
+        $peers[$i]
+            ->message_ok( "peer $i received message" )
+            ->message_is( 'Hello 4' );
+    }
+};
+
 for my $i ( 0..$#peers ) {
     $peers[$i]->finish_ok;
 }

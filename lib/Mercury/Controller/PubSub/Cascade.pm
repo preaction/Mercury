@@ -63,17 +63,7 @@ sub publish {
     # Send messages to parent topics
     $c->tx->on( message => sub {
         my ( $tx, $msg ) = @_;
-        my @parts = split m{/}, $topic;
-        my @patterns =
-            # Only pattern objects that have been created
-            grep { defined }
-            # Change topics into pattern objects
-            map { $c->mercury->pattern( 'PubSub::Cascade' => $_ ) }
-            # Build parent topics
-            map { join '/', @parts[0..$_] }
-            0..$#parts-1;
-
-        $_->send_message( $msg ) for @patterns;
+        $c->_send_message( $topic, $msg );
     } );
 
     $c->rendered( 101 );
@@ -99,6 +89,26 @@ sub subscribe {
     $c->rendered( 101 );
 }
 
+=method post
+
+Post a new message to the given topic without subscribing or
+establishing a WebSocket connection. This allows new messages to be
+pushed by any HTTP client.
+
+=cut
+
+sub post {
+    my ( $c ) = @_;
+    my $topic = $c->stash( 'topic' );
+    my $pattern = $c->_pattern( $topic );
+    $pattern->send_message( $c->req->body );
+    $c->_send_message( $topic, $c->req->body );
+    $c->render(
+        status => 200,
+        text => '',
+    );
+}
+
 #=method _pattern
 #
 #   my $pattern = $c->_pattern( $topic );
@@ -116,6 +126,28 @@ sub _pattern {
         $c->mercury->pattern( 'PubSub::Cascade' => $topic => $pattern );
     }
     return $pattern;
+}
+
+#=method _send_message
+#
+#   $c->_send_message( $topic, $msg );
+#
+# Send the given message out on all the appropriate topics. This handles
+# the "Cascade" part.
+#=cut
+
+sub _send_message {
+    my ( $c, $topic, $msg ) = @_;
+    my @parts = split m{/}, $topic;
+    my @patterns =
+        # Only pattern objects that have been created
+        grep { defined }
+        # Change topics into pattern objects
+        map { $c->mercury->pattern( 'PubSub::Cascade' => $_ ) }
+        # Build parent topics
+        map { join '/', @parts[0..$_] }
+        0..$#parts-1;
+    $_->send_message( $msg ) for @patterns;
 }
 
 1;

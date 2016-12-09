@@ -121,6 +121,17 @@ subtest 'sixth message' => sub {
     shift @{ $got[ 3 ] };
 };
 
+subtest 'post to push' => sub {
+    my $t = Test::Mojo->new( $app );
+    $t->post_ok( '/push/foo' => 'Hello Push' )
+        ->status_is( 200 )
+        ->content_is( '' )
+        ;
+
+    $pulls[ 3 ]
+        ->message_ok( "only puller received post (seventh) message" )
+        ->message_is( 'Hello Push' );
+};
 $push_t->finish_ok;
 $stranger_t->finish_ok;
 

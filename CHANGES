@@ -2,6 +2,12 @@ Changelog for Mojolicious-Broker
 
 {{ $NEXT }}
 
+    [Added]
+
+    - /pub/*, /push/*, and /bus/* can now accept POST requests to post
+      new messages to the appropriate subscribers. This allows any
+      random HTTP client to send messages (but not receive them, yet)
+
 0.009 2016-09-02T01:23:40
  - update dist settings from other projects
  - upgrade perl versions in travis tests

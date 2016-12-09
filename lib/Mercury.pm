@@ -59,6 +59,9 @@ sub startup {
     $r->websocket( '/push/*topic' )
       ->to( controller => 'PushPull', action => 'push' )
       ->name( 'push' );
+    $r->post( '/push/*topic' )
+      ->to( controller => 'PushPull', action => 'post' )
+      ->name( 'push_post' );
     $r->websocket( '/pull/*topic' )
       ->to( controller => 'PushPull', action => 'pull' )
       ->name( 'pull' );
@@ -66,6 +69,9 @@ sub startup {
     $r->websocket( '/pub/*topic' )
       ->to( controller => 'PubSub::Cascade', action => 'publish' )
       ->name( 'pub' );
+    $r->post( '/pub/*topic' )
+      ->to( controller => 'PubSub::Cascade', action => 'post' )
+      ->name( 'pub_post' );
     $r->websocket( '/sub/*topic' )
       ->to( controller => 'PubSub::Cascade', action => 'subscribe' )
       ->name( 'sub' );
@@ -73,6 +79,9 @@ sub startup {
     $r->websocket( '/bus/*topic' )
       ->to( controller => 'Bus', action => 'connect' )
       ->name( 'bus' );
+    $r->post( '/bus/*topic' )
+      ->to( controller => 'Bus', action => 'post' )
+      ->name( 'bus_post' );
 
     if ( $app->mode eq 'development' ) {
         # Enable the example app

@@ -47,6 +47,25 @@ sub connect {
     $c->rendered( 101 );
 };
 
+=method post
+
+Post a new message to the given topic without subscribing or
+establishing a WebSocket connection. This allows new messages to be
+pushed by any HTTP client.
+
+=cut
+
+sub post {
+    my ( $c ) = @_;
+    my $topic = $c->stash( 'topic' );
+    my $pattern = $c->_pattern( $topic );
+    $pattern->send_message( $c->req->body );
+    $c->render(
+        status => 200,
+        text => '',
+    );
+}
+
 #=method _pattern
 #
 #   my $pattern = $c->_pattern( $topic );
