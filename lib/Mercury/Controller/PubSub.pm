@@ -1,5 +1,5 @@
 package Mercury::Controller::PubSub;
-our $VERSION = '0.010';
+our $VERSION = '0.011';
 # ABSTRACT: Pub/sub message pattern controller
 
 =head1 SYNOPSIS
