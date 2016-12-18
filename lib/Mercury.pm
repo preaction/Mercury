@@ -1,5 +1,5 @@
 package Mercury;
-our $VERSION = '0.011';
+our $VERSION = '0.012';
 # ABSTRACT: Main broker application class
 
 =head1 SYNOPSIS

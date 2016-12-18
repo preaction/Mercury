@@ -1,5 +1,5 @@
 package Mercury::Pattern::PushPull;
-our $VERSION = '0.011';
+our $VERSION = '0.012';
 # ABSTRACT: Manage a push/pull pattern for a single topic
 
 =head1 SYNOPSIS
