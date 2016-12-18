@@ -1,5 +1,13 @@
 Changelog for Mojolicious-Broker
 
+0.011     2016-12-17 21:09:31-06:00 America/Chicago
+
+    [Fixed]
+
+    - Default inactivity timeout is now 4 hours instead of 20 minutes.
+      This makes it less likely that your subscribers will lose their
+      connection to the broker unexpectedly.
+
 0.010     2016-12-08 18:03:45-06:00 America/Chicago
 
     [Added]
