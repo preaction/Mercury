@@ -19,8 +19,8 @@ our $VERSION = '0.011';
                                          SOMAXCONN
     -c, --clients <number>               Maximum number of concurrent
                                          connections, defaults to 1000
-    -i, --inactivity-timeout <seconds>   Inactivity timeout, defaults to 20
-                                         minutes
+    -i, --inactivity-timeout <seconds>   Inactivity timeout, defaults to 4
+                                         hours
     -l, --listen <location>              One or more locations you want to
                                          listen on, defaults to the value of
                                          MOJO_LISTEN or "http://*:3000"
@@ -80,7 +80,7 @@ sub run {
 
     my $daemon = Mojo::Server::Daemon->new(
         app => $app,
-        inactivity_timeout => 1200,
+        inactivity_timeout => 4 * 60 * 60,
     );
 
     GetOptionsFromArray( \@args,
