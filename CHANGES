@@ -1,5 +1,14 @@
 Changelog for Mojolicious-Broker
 
+0.012     2017-01-12 19:28:59-06:00 America/Chicago
+
+    [Fixed]
+
+    - Fixed allow_origin.t test failing on new versions of Mojolicious
+      due to an invalid assumption in the test. Previously it was
+      accidentally working, now it is deliberately working. Thanks
+      @eserte for the report! [Github #37]
+
 0.011     2016-12-17 21:09:31-06:00 America/Chicago
 
     [Fixed]
