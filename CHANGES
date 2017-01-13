@@ -1,5 +1,7 @@
 Changelog for Mojolicious-Broker
 
+{{ $NEXT }}
+
 0.012     2017-01-12 19:28:59-06:00 America/Chicago
 
     [Fixed]

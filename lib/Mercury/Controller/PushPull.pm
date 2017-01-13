@@ -1,5 +1,5 @@
 package Mercury::Controller::PushPull;
-our $VERSION = '0.012';
+our $VERSION = '0.013';
 # ABSTRACT: Push/pull message pattern controller
 
 =head1 SYNOPSIS

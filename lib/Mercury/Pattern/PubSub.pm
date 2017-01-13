@@ -1,5 +1,5 @@
 package Mercury::Pattern::PubSub;
-our $VERSION = '0.012';
+our $VERSION = '0.013';
 # ABSTRACT: Manage a pub/sub pattern for a single topic
 
 =head1 SYNOPSIS
