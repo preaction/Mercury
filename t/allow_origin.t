@@ -2,10 +2,11 @@
 use Mojo::Base -strict;
 use File::Basename qw( dirname );
 use File::Spec::Functions qw( catfile );
+use Cwd qw( abs_path );
 use Test::Mojo;
 use Test::More;
 
-my $conf = catfile( dirname( __FILE__ ), 'share', 'allow_origin.conf' );
+my $conf = abs_path( catfile( dirname( __FILE__ ), 'share', 'allow_origin.conf' ) );
 $ENV{MOJO_CONFIG} = $conf;
 my $t = Test::Mojo->new( 'Mercury' );
 
