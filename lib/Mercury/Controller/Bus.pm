@@ -32,7 +32,6 @@ query parameter when establishing the websocket.
 
 sub connect {
     my ( $c ) = @_;
-    Mojo::IOLoop->stream($c->tx->connection)->timeout(1200);
 
     my $topic = $c->stash( 'topic' );
     my $pattern = $c->_pattern( $topic );

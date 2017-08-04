@@ -26,9 +26,10 @@ logging, and other customizations, see L<Mojolicious::Plugin::Mercury>.
 =cut
 
 use Mojo::Base 'Mojolicious';
-use Scalar::Util qw( refaddr );
+use Scalar::Util qw( weaken refaddr );
 use File::Basename qw( dirname );
 use File::Spec::Functions qw( catdir );
+use Mojo::WebSocket 'WS_PING';
 
 sub startup {
     my ( $app ) = @_;
@@ -55,6 +56,18 @@ sub startup {
             return 1;
         } );
     }
+
+    $app->hook( before_dispatch => sub {
+        my ( $c ) = @_;
+        if ( $c->tx->is_websocket ) {
+            weaken $c;
+            my $id = Mojo::IOLoop->recurring( 300, sub {
+                return unless $c;
+                $c->tx->send([1, 0, 0, 0, WS_PING, 'Still alive!']);
+            } );
+            $c->tx->once( finish => sub { Mojo::IOLoop->remove( $id ) } );
+        }
+    } );
 
     $app->plugin( 'Mercury' );
     $r->websocket( '/push/*topic' )
