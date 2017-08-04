@@ -1,5 +1,5 @@
 package Mojolicious::Plugin::Mercury;
-our $VERSION = '0.013';
+our $VERSION = '0.014';
 # ABSTRACT: Plugin for Mojolicious to add Mercury functionality
 
 =head1 SYNOPSIS

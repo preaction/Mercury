@@ -1,5 +1,5 @@
 package Mercury::Command::mercury;
-our $VERSION = '0.013';
+our $VERSION = '0.014';
 # ABSTRACT: Mercury command for Mojolicious
 
 use Mojo::Base 'Mojolicious::Commands';
