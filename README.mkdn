@@ -4,7 +4,7 @@ mercury - A message broker for WebSockets
 
 # VERSION
 
-version 0.012
+version 0.013
 
 # STATUS
 
@@ -206,6 +206,7 @@ Doug Bell <preaction@cpan.org>
 # CONTRIBUTORS
 
 - Joel Berger <joel.a.berger@gmail.com>
+- Justin Hunter <justin.d.hunter@gmail.com>
 - Mohammad S Anwar <mohammad.anwar@yahoo.com>
 - William Lindley <wlindley@wlindley.com>
 
