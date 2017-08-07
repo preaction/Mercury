@@ -1,5 +1,5 @@
 package Mercury::Controller::PubSub::Cascade;
-our $VERSION = '0.014';
+our $VERSION = '0.015';
 # ABSTRACT: Pub/sub controller with a topic heirarchy and cascading
 
 =head1 SYNOPSIS

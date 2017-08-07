@@ -1,5 +1,5 @@
 package Mercury::Controller::Bus;
-our $VERSION = '0.014';
+our $VERSION = '0.015';
 # ABSTRACT: A messaging pattern where all subscribers share messages
 
 =head1 SYNOPSIS
