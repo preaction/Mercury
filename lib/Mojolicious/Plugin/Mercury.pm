@@ -44,20 +44,20 @@ The built-in controllers are:
 
 =item L<Mercury::Controller::PubSub>
 
-Establish a L<Pub/Sub pattern|Mercury::Pattern::PubSub> on a topic.
+Establish a L<PubE<sol>Sub pattern|Mercury::Pattern::PubSub> on a topic.
 Pub/Sub allows publishers to publish messages that will be received by
 all subscribers, useful for event notifications.
 
 =item L<Mercury::Controller::PubSub::Cascade>
 
-Establish a L<Pub/Sub pattern|Mercury::Pattern::PubSub> on a topic in
+Establish a L<PubE<sol>Sub pattern|Mercury::Pattern::PubSub> on a topic in
 a heirarchy, with subscribers to parent topics receiving messages sent
 to child topics. More efficient when dealing with large numbers of
 topics.
 
 =item L<Mercury::Controller::PushPull>
 
-Establish a L<Push/Pull pattern|Mercury::Pattern::PushPull> on a topic.
+Establish a L<PushE<sol>Pull pattern|Mercury::Pattern::PushPull> on a topic.
 Push/Pull allows publishers to publish messages that will be received by
 one and only one subscriber in a round-robin fashion, useful for job
 workers
