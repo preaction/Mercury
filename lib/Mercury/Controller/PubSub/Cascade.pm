@@ -14,7 +14,7 @@ our $VERSION = '0.014';
 
 =head1 DESCRIPTION
 
-This controller enables a L<pub/sub pattern|Mercury::Pattern::PubSub> on
+This controller enables a L<pubE<sol>sub pattern|Mercury::Pattern::PubSub> on
 a pair of endpoints (L<publish|/publish> and L<subscribe|/subscribe>.
 
 In this variant, topics are organized into a heirarchy. Subscribers can

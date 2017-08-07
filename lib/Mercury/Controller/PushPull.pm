@@ -14,7 +14,7 @@ our $VERSION = '0.014';
 
 =head1 DESCRIPTION
 
-This controller enables a L<push/pull pattern|Mercury::Pattern::PushPull> on
+This controller enables a L<pushE<sol>pull pattern|Mercury::Pattern::PushPull> on
 a pair of endpoints (L<push|/push> and L<pull|/pull>.
 
 For more information on the push/pull pattern, see L<Mercury::Pattern::PushPull>.
