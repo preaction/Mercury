@@ -33,6 +33,7 @@ use Mojo::WebSocket 'WS_PING';
 
 sub startup {
     my ( $app ) = @_;
+    $app->log( Mojo::Log->new ); # Log only to STDERR
     $app->plugin( 'Config', { default => { broker => { } } } );
     $app->commands->namespaces( [ 'Mercury::Command::mercury' ] );
 
