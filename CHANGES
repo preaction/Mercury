@@ -2,6 +2,8 @@ Changelog for Mojolicious-Broker
 
 {{ $NEXT }}
 
+0.015     2017-08-22 20:15:48-05:00 America/Chicago
+
     [Fixed]
 
     - The broker now always logs to STDERR, even if a directory named
