@@ -43,7 +43,7 @@ sending notification events and logging.
 
 =cut
 
-use Mojo::Base 'Mojo';
+use Mojo::Base '-base';
 
 =attr subscribers
 

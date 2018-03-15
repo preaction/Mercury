@@ -42,7 +42,7 @@ a single puller. This pattern is useful for dealing out jobs to workers.
 
 =cut
 
-use Mojo::Base 'Mojo';
+use Mojo::Base '-base';
 
 =attr pullers
 

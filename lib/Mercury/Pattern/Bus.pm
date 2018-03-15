@@ -10,7 +10,7 @@ our $VERSION = '0.016';
 
 =cut
 
-use Mojo::Base 'Mojo';
+use Mojo::Base '-base';
 
 =attr peers
 
