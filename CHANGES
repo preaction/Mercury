@@ -2,6 +2,8 @@ Changelog for Mojolicious-Broker
 
 {{ $NEXT }}
 
+0.016     2018-03-15 14:58:57-05:00 America/Chicago
+
     [Fixed]
 
     - Fixed use of deprecated `Mojo` base class
